@@ -15,11 +15,9 @@ export default defineComponent({
   name: "emailInput",
   props: ["modelValue"], //added the prop
   emits: ["update:modelValue"], //component emits the updated prop
-
   setup(props, context) {
     const email = ref(null);
     const confirm = ref(false);
-
     watch(email, () => {
       context.emit("update:modelValue", email.value); //here's what i did wrong, didn't add the prop name to the event name. adding it fixed it. this works
     });
