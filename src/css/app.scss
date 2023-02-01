@@ -1,21 +1,21 @@
 // app global css in SCSS form
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans&display=swap");
 
 $h1-size: 38px;
 $h2-size: 30px;
 $radio-icon-size: 0.35em;
 $item-radius: 8px;
-$white: #FFFFFF;
-$primary-font: 'DM Sans';
+$white: #ffffff;
+$primary-font: "DM Sans";
 $accent: #ecdacd8c;
 $primary-font-size: 16px;
 
-@media screen and (max-width:768px) {
+@media screen and (max-width: 768px) {
   $h1-size: 32px !global;
   $h2-size: 22px !global;
 }
 
-@media screen and (min-width:530px) {
+@media screen and (min-width: 530px) {
   .layout_tourastio {
     max-width: 530px;
     max-height: 675px;
@@ -43,7 +43,7 @@ $primary-font-size: 16px;
     display: none !important;
   }
 }
-@media screen and (max-width:530px){
+@media screen and (max-width: 530px) {
   .step {
     min-height: calc(100vh - 60px);
   }
@@ -68,7 +68,7 @@ $primary-font-size: 16px;
 //}
 
 body {
-  background: #F0E7E1;
+  background: #f0e7e1;
   font-size: $primary-font-size;
   font-family: $primary-font;
 }
@@ -93,7 +93,7 @@ button {
   z-index: 4000;
   height: 100%;
   width: 100%;
-  background: #F8F4F1;
+  background: #f8f4f1;
   bottom: 0;
   top: 0;
   overflow: hidden;
@@ -103,7 +103,8 @@ button {
   background-color: transparent;
 }
 
-.btn-main, .btn-secondary {
+.btn-main,
+.btn-secondary {
   text-transform: capitalize;
   text-align: center;
   border-radius: $item-radius;
@@ -123,7 +124,7 @@ button {
 .btn-secondary {
   color: black;
   background: white;
-  border: 1px solid #D9D9D9;
+  border: 1px solid #d9d9d9;
   width: 47%;
 }
 
@@ -132,7 +133,8 @@ button {
   width: 100%;
 }
 
-h1, h2 {
+h1,
+h2 {
   font-style: normal;
   font-weight: 700;
   font-size: $h1-size;
@@ -150,7 +152,8 @@ h2 {
   font-size: 16px;
 }
 
-.text-body, .text-body-small {
+.text-body,
+.text-body-small {
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
@@ -227,14 +230,16 @@ img {
   height: 27px;
 }
 
-.q-radio__inner--truthy i, .q-checkbox__inner--truthy i {
+.q-radio__inner--truthy i,
+.q-checkbox__inner--truthy i {
   background-color: $primary;
   color: $white;
 }
 
- .q-radio__icon, .q-checkbox__icon {
-   font-size: $radio-icon-size;
- }
+.q-radio__icon,
+.q-checkbox__icon {
+  font-size: $radio-icon-size;
+}
 
 .q-item__label {
   display: flex;
@@ -242,9 +247,8 @@ img {
   align-items: center;
 }
 
-
 .radio-group-big {
-  background: #FFFFFF;
+  background: #ffffff;
   border: 1px solid $accent;
   border-radius: $item-radius;
   height: 100px;
@@ -268,12 +272,10 @@ img {
   height: auto;
 }
 
-
 .checkboxes-group-small img {
   height: 18px;
   width: 21px;
 }
-
 
 .selection-img {
   height: 64px;
@@ -282,8 +284,8 @@ img {
 
 .number-button {
   background: $white;
-  border: 1px solid #D9D9D9;
-  border-radius:50%;
+  border: 1px solid #d9d9d9;
+  border-radius: 50%;
   width: 37px;
   height: 37px;
   display: flex;
@@ -316,7 +318,7 @@ img {
 
 .swiper {
   //height: 40vh;
-  height: 330px;;
+  height: 330px;
   margin-left: auto;
   margin-right: auto;
 
@@ -368,7 +370,7 @@ img {
   overflow: visible;
 }
 
-.swiper-grid-column>.swiper-wrapper {
+.swiper-grid-column > .swiper-wrapper {
   overflow: visible;
   padding: 4px 0;
 }
@@ -417,7 +419,7 @@ img {
 }
 .image {
   width: 100%;
-  border-radius: 8px
+  border-radius: 8px;
 }
 
 .happy-users {
@@ -451,13 +453,13 @@ img {
 }
 
 .q-field--outlined .q-field__control:before {
-  border: 1px solid #D9D9D9;
+  border: 1px solid #d9d9d9;
   border-radius: $item-radius;
 }
 
 .disclaimer-box {
-  background: #DCE7F8;
-  border: 2px solid #0265FF;
+  background: #dce7f8;
+  border: 2px solid #0265ff;
   border-radius: 8px;
   padding: 12px 19px;
   text-align: left;
@@ -491,8 +493,6 @@ img {
   background: white !important;
 }
 
-
-
 .what-you-get .q-item__section--side {
   padding-right: 0 !important;
 }
@@ -511,7 +511,7 @@ img {
   margin-bottom: 15px;
 }
 
-.email-form .q-checkbox__label{
+.email-form .q-checkbox__label {
   font-weight: 400;
   font-size: 10px;
   line-height: 13px;
@@ -531,14 +531,16 @@ img {
   background: black !important;
 }
 
-.swiper-overflow-container .swiper-horizontal>.swiper-pagination-bullets, .swiper-pagination-bullets.swiper-pagination-horizontal, .swiper-pagination-custom, .swiper-pagination-fraction {
+.swiper-overflow-container .swiper-horizontal > .swiper-pagination-bullets,
+.swiper-pagination-bullets.swiper-pagination-horizontal,
+.swiper-pagination-custom,
+.swiper-pagination-fraction {
   bottom: -35px;
 }
 
 .visited-countries-select {
   overflow: hidden !important;
 }
-
 
 .visited-countries-select .swiper-slide {
   height: 320px !important;
@@ -569,10 +571,9 @@ img {
 }
 
 .email-form .fit {
-    width: 65% !important;
-    height: 65% !important;
-    border-radius: 50%;
-
+  width: 65% !important;
+  height: 65% !important;
+  border-radius: 50%;
 }
 
 .email-form .fit.absolute-full {
