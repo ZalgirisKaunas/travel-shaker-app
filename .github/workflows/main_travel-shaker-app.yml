@@ -24,8 +24,9 @@ jobs:
           node-version: '18.x'
 
       - name: Install dependencies
-        run: yarn install
-             yarn add @quasar/cli
+        run: |
+          yarn install
+          yarn global add @quasar/cli
 
       - name: npm install, build, and test
         run: |
