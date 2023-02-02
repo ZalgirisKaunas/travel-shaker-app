@@ -25,7 +25,7 @@ jobs:
 
       - name: Install dependencies
         run: yarn install
-             yarn global add @quasar/cli
+             yarn add @quasar/cli
 
       - name: npm install, build, and test
         run: |
