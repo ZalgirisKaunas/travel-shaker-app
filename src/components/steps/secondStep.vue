@@ -78,11 +78,7 @@ export default defineComponent({
 
     const getPinterest = async () => {
       api
-        .get("boards/1141944117954581257/pins", {
-          params: {
-            page_size: 50,
-          },
-        })
+        .post("/", {})
         .then(async (d) => {
           let items = d.data.items;
           items = items.filter(
