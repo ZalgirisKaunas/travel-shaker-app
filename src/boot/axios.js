@@ -8,17 +8,19 @@ import axios from "axios";
 // "export default () => {}" function below (which runs individually
 // for each client)
 const api = axios.create({
-  method: "get",
-  // withCredentials: true,
-  // crossDomain: true,
-  // mode: 'no-cors',
-  baseURL: "https://api.pinterest.com/v5",
-  headers: {
-    // 'Content-Type': 'application/json',
-    // 'Access-Control-Allow-Origin': '*',
-    Authorization:
-      "Bearer pina_AEA5RIAWADA7QAIAGDAM6DNECFRO5BIBACGSOGADDZYKPJCYRWKRNJDEQ2LUPG2BZAIXRX4X5STJDZI4BIS2FKWRHC4C2TIA",
-  },
+  method: "post",
+  baseURL: "https://pinterest-api.azurewebsites.net/api/pinterest-api?code=zLeJwhH7fUpbrlWhQI7amsp2pYrUNfGTAGkwGzIx_hqXAzFuZ9NAxQ==",
+  // method: "get",
+  // // withCredentials: true,
+  // // crossDomain: true,
+  // // mode: 'no-cors',
+  // baseURL: "https://api.pinterest.com/v5",
+  // headers: {
+  //   // 'Content-Type': 'application/json',
+  //   // 'Access-Control-Allow-Origin': '*',
+  //   Authorization:
+  //     "Bearer pina_AEA5RIAWADA7QAIAGDAM6DNECFRO5BIBACGSOGADDZYKPJCYRWKRNJDEQ2LUPG2BZAIXRX4X5STJDZI4BIS2FKWRHC4C2TIA",
+  // },
 });
 
 const tourastioApi = axios.create({
