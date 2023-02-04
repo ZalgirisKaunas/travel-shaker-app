@@ -1,6 +1,5 @@
 <template>
   <div class="swiper-overflow-container">
-    <!--{{ selectedPhotos }}-->
     <div class="container">
       <swiper
         :slides-per-view="2.2"
@@ -58,7 +57,7 @@ import { api, tourastioApi } from "boot/axios";
 
 export default defineComponent({
   name: "sliderSelect",
-  props: ["modelValue", "board"], //added the prop
+  props: ["modelValue", "board", "pinFeedSlider"], //added the prop
   emits: ["update:modelValue"], //component emits the updated prop
   components: { Swiper, SwiperSlide },
   setup(props, context) {
@@ -69,60 +68,15 @@ export default defineComponent({
       context.emit("update:modelValue", selectedPhotos.value);
     });
 
-    const getPinterest = async () => {
-      console.log("get board");
-      console.log(`boards/${props.board}/pins`);
-
-      api
-        .get(`boards/${props.board}/pins`, {
-          params: {
-            page_size: 50,
-          },
-        })
-        .then(async (d) => {
-          console.clear();
-          let items = d.data.items;
-          items = items.filter(
-            (i) =>
-              i.description !== "" &&
-              i.description !== " " &&
-              i.media.images &&
-              i.media.images["600x"]
-          );
-          items = items.map((item) => ({
-            id: item.id,
-            description: item.description,
-            image: item.media.images["600x"].url,
-          }));
-          const result = await getTags(items);
-          const withLocation = result.data.filter(
-            (item) =>
-              item.locationsCities.length > 0 ||
-              item.locationsCountries !== "{}"
-          );
-          pinFeed.value = withLocation.slice(0, 10);
-        });
-    };
 
     onMounted(async () => {
-      console.log(props.board);
-      console.log("get board");
-      console.log(`boards/${props.board}/pins`);
-      await getPinterest();
+        pinFeed.value = props.pinFeedSlider;
     });
 
-    const getTags = async (items, analyse = false) => {
-      return await tourastioApi.post("/analysePhotos", {
-        data: items,
-        analyse,
-      });
-    };
 
     return {
       pinFeed,
       selectedPhotos,
-      getTags,
-      getPinterest,
       modules: [Grid, Pagination],
     };
   },

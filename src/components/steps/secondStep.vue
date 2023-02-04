@@ -41,7 +41,7 @@ import { api, tourastioApi } from "boot/axios";
 
 export default defineComponent({
   name: "secondStep",
-  props: ["modelValue"], //added the prop
+  props: ["modelValue", "pinFeed"], //added the prop
   emits: ["update:modelValue"], //component emits the updated prop
   components: { Swiper, SwiperSlide },
   setup(props, context) {
@@ -76,43 +76,10 @@ export default defineComponent({
       context.emit("changeStep", val);
     };
 
-    const getPinterest = async () => {
-      api
-        .post("/", {})
-        .then(async (d) => {
-          let items = d.data.items;
-          items = items.filter(
-            (i) =>
-              i.description !== "" &&
-              i.description !== " " &&
-              i.media.images &&
-              i.media.images["600x"]
-          );
-          items = items.map((item) => ({
-            id: item.id,
-            description: item.description,
-            image: item.media.images["600x"].url,
-          }));
-          const result = await getTags(items);
-          const withLocation = result.data.filter(
-            (item) =>
-              item.locationsCities.length > 0 ||
-              item.locationsCountries !== "{}"
-          );
-          pinFeedVisited.value = withLocation.slice(0, 10);
-        });
-    };
-
     onMounted(async () => {
-      await getPinterest();
+      // await getPinterest();
+      pinFeedVisited.value = props.pinFeed
     });
-
-    const getTags = async (items, analyse = false) => {
-      return await tourastioApi.post("/analysePhotos", {
-        data: items,
-        analyse,
-      });
-    };
 
     return {
       visitedPhotos,

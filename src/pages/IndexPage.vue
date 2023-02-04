@@ -32,7 +32,7 @@
       :next="false"
       :step="step"
     >
-      <second-step v-model="visitedPlaces" @changeStep="changeStepp" />
+      <second-step v-model="visitedPlaces" :pinFeed="pinFeedVisited" @changeStep="changeStepp" />
     </form-step>
 
     <form-step
@@ -116,7 +116,7 @@ to travel for?"
       :step="step"
     >
       <!--      {{ selectedPhotos }}-->
-      <slider-select :board="'1141944117954577838'" v-model="selectedPhotos" />
+      <slider-select :board="'1141944117954577838'" :pinFeedSlider="pinFeedDream" v-model="selectedPhotos" />
     </form-step>
 
     <form-step
@@ -138,8 +138,8 @@ to travel for?"
       class="step flex flex-center"
       :step="step"
     >
-      <!--      {{ selectedActivities }}-->
       <slider-select
+        :pinFeedSlider="pinFeedActivities"
         :board="'1141944117954581418'"
         v-model="selectedActivities"
       />
@@ -217,6 +217,10 @@ export default defineComponent({
     const priorities = ref([]);
     const email = ref(null);
     const request = ref(null);
+    const pinFeedVisited = ref([]);
+    const pinFeedDream = ref([]);
+    const pinFeedActivities = ref([]);
+
     // const sheetDB = ref(SheetDB);
     const buildReq = async () => {
       step.value = 0;
@@ -250,20 +254,45 @@ export default defineComponent({
         visitedCountriesAnalyzed,
         visitedPlaces: visitedPlaces.value,
       };
-
       console.log(req);
-
       request.value = request;
 
       const response = await tApi.post("/processRequest", req);
       console.log(response);
       step.value = 9;
-
       // sheetDB.value.write("https://sheetdb.io/api/v1/uwjeewf4u1bk4", {
       //   sheet: "Travel shaker",
       //   data: req,
       // });
     };
+
+    const getPinterest = async (board_id) => {
+      const d = await api.post("/", { "board_id" : board_id })
+
+      let items = d.data;
+      items = items.filter(
+        (i) =>
+          i.description !== "" &&
+          i.description !== " " &&
+          i.media.images &&
+          i.media.images["600x"]
+      );
+      items = items.map((item) => ({
+        id: item.id,
+        description: item.description,
+        image: item.media.images["600x"].url,
+      }));
+      const result = await getTags(items);
+      const withLocation = result.data.filter(
+        (item) =>
+          item.locationsCities.length > 0 ||
+          item.locationsCountries !== "{}"
+      );
+      console.log(withLocation.length);
+
+      return withLocation.slice(0, 10);
+    };
+
 
     const getTags = async (items, analyse = false) => {
       console.log(items);
@@ -316,7 +345,16 @@ export default defineComponent({
       }
     });
 
+    onMounted(async () => {
+      pinFeedVisited.value = await getPinterest('1141944117954581257');
+      pinFeedDream.value = await getPinterest('1141944117954577838');
+      pinFeedActivities.value = await getPinterest('1141944117954581418');
+    });
+
     return {
+      pinFeedVisited,
+      pinFeedDream,
+      pinFeedActivities,
       buildReq,
       feedback,
       loadingAnim,
