@@ -9,7 +9,7 @@ import axios from "axios";
 // for each client)
 const api = axios.create({
   method: "post",
-  baseURL: "https://pinterest-api.azurewebsites.net/api/pinterest-api?code=zLeJwhH7fUpbrlWhQI7amsp2pYrUNfGTAGkwGzIx_hqXAzFuZ9NAxQ==",
+  baseURL: "https://pinterest-api.azurewebsites.net/api/pinterest-api",
   // method: "get",
   // // withCredentials: true,
   // // crossDomain: true,
