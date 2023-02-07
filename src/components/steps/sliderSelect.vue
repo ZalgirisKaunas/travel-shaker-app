@@ -68,6 +68,11 @@ export default defineComponent({
       context.emit("update:modelValue", selectedPhotos.value);
     });
 
+    watch(() => props.pinFeedSlider,
+      (first, second) => {
+        pinFeed.value = props.pinFeedSlider;
+      }
+    );
 
     onMounted(async () => {
         pinFeed.value = props.pinFeedSlider;

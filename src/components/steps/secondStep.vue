@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted } from "vue";
+import {defineComponent, ref, onMounted, watch} from "vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css/grid";
 import "swiper/css/pagination";
@@ -75,6 +75,12 @@ export default defineComponent({
     const changeStep = (val) => {
       context.emit("changeStep", val);
     };
+
+    watch(() => props.pinFeed,
+      (first, second) => {
+        pinFeedVisited.value = props.pinFeed;
+      }
+    );
 
     onMounted(async () => {
       // await getPinterest();
