@@ -180,9 +180,9 @@ import prioritiesSelect from "components/steps/prioritiesSelect.vue";
 import whatYouGet from "components/steps/whatYouGet.vue";
 import emailInput from "components/emailInput.vue";
 import { api, tApi, tourastioApi } from "boot/axios";
-// import SheetDB from 'sheetdb-js';
 import loadingURL from "assets/animations/loading";
 import SliderSelect from "components/steps/sliderSelect.vue";
+
 
 //TODO VISA STEP FORMA ISEXTRACTINT I ATSKIRA KOMPONENTA IR SITA PALIKT LABAI TUSCIA
 export default defineComponent({
@@ -230,7 +230,7 @@ export default defineComponent({
 
       const tags = await getTags(photos, true);
       const tags2 = await getTags(photos2, true);
-      const analyzedPhotos = await getTags(selectedActivities.value, true);
+      const analyzedPhotos = await getTags(visitedPlaces.value, false);
       let visitedCountriesAnalyzed = analyzedPhotos.data.map((item) => ({
         tags: item.tags,
         country:
@@ -240,6 +240,13 @@ export default defineComponent({
               Object.keys(JSON.parse(item.locationsCountries))[0]
             : " " + Object.keys(JSON.parse(item.locationsCountries))[0],
       }));
+
+      console.log('tags');
+      console.log(tags);
+      console.log(tags2);
+      console.log(visitedCountriesAnalyzed);
+
+
       const req = {
         id: "",
         email: email.value,
@@ -248,26 +255,27 @@ export default defineComponent({
         adultAmount: adultAmount.value,
         childAmount: childAmount.value,
         infantAmount: infantAmount.value,
-        dreamHolidayTags: tags,
-        activitiesTags: tags2,
+        dreamHolidayTags: [...new Set(tags.data.map(tag => tag.tags.map(i => i.name)).flat(1))].join(', '),
+        activitiesTags: [...new Set(tags2.data.map(tag => tag.tags.map(i => i.name)).flat(1))].join(', '),
         priorities: priorities.value,
-        visitedCountriesAnalyzed,
-        visitedPlaces: visitedPlaces.value,
+        visitedBefore: visitedCountriesAnalyzed.map(place => place.country).join(', '),
+        // visitedPlaces: visitedPlaces.value, // take cities and countries out of this one
       };
       console.log(req);
       request.value = request;
 
-      const response = await tApi.post("/processRequest", req);
-      console.log(response);
+      // const response = await tApi.post("/processRequest", req);
+      const d = await api.post("https://pinterest-api.azurewebsites.net/api/google-api?code=i_Nsgoj95MDevkSEnbJg_loKZN89L3kcbcJP_W9P2c9JAzFuK5r9kA==", req);
+      console.log(d);
+      console.log(d);
+
+      // console.log(response);
       step.value = 9;
-      // sheetDB.value.write("https://sheetdb.io/api/v1/uwjeewf4u1bk4", {
-      //   sheet: "Travel shaker",
-      //   data: req,
-      // });
+
     };
 
     const getPinterest = async (board_id) => {
-      const d = await api.post("/", { "board_id" : board_id })
+      const d = await api.post("/pinterest-api", { "board_id" : board_id })
 
       let items = d.data;
       items = items.filter(
@@ -301,24 +309,26 @@ export default defineComponent({
         analyse,
       });
     };
-    // const getRecommendation = async (items) => {
-    //   // const photos = selectedPhotos.value.map(photo => pinFeed.value.find(item => item.image === photo));
-    //   feedback.value = 'Analyzing your preferences';
-    //   const analyzedPhotos = await getTags(visitedPlaces.value, true);
-    //   let reqArray = analyzedPhotos.data
-    //     .map(item => ({
-    //       tags: item.tags,
-    //       country: item.locationsCities.length > 0 ? item.locationsCities[0] + ' ' + Object.keys(JSON.parse(item.locationsCountries))[0] : ' ' + Object.keys(JSON.parse(item.locationsCountries))[0]
-    //     }));
-    //   feedback.value = null;
-    //   console.log('analyzedPhotos');
-    //   console.log(reqArray);
-    //   feedback.value = 'Getting your recommendations';
-    //
-    //   // const result = await tourastioApi.post('/recommendCountries', { data: reqArray });
-    //   // return result.data;
-    //   return ['s', 's', 's']
-    // };
+    const getRecommendation = async (items) => {
+      // const photos = selectedPhotos.value.map(photo => pinFeed.value.find(item => item.image === photo));
+      feedback.value = 'Analyzing your preferences';
+      const analyzedPhotos = await getTags(visitedPlaces.value, true);
+      let reqArray = analyzedPhotos.data
+        .map(item => ({
+          tags: item.tags,
+          country: item.locationsCities.length > 0 ? item.locationsCities[0] + ' ' + Object.keys(JSON.parse(item.locationsCountries))[0] : ' ' + Object.keys(JSON.parse(item.locationsCountries))[0]
+        }));
+
+      console.log('analyzedPhotos');
+      console.log(analyzedPhotos);
+      console.log(reqArray)
+
+
+      const result = await tourastioApi.post('/recommendCountries', { data: reqArray });
+      console.log(result);
+      // return result.data;
+      return ['s', 's', 's']
+    };
 
     const changeStepp = async (valueToIncrement) => {
       const newStep = step.value + valueToIncrement;
