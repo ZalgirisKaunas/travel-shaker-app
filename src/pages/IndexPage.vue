@@ -91,15 +91,15 @@ to travel for?"
       class="step flex flex-center"
       :step="step"
     >
+
       <q-list class="radio-group">
-        <q-item-section>
           <q-radio
             left-label
             v-model="tDuration"
+            tDuration="0"
             val="0"
             label="Up to 5 days"
           />
-        </q-item-section>
         <q-radio left-label v-model="tDuration" val="1" label="1 week" />
         <q-radio left-label v-model="tDuration" val="2" label="2 weeks" />
         <q-radio left-label v-model="tDuration" val="3" label="3-4 weeks" />
@@ -147,22 +147,53 @@ to travel for?"
     <form-step
       v-if="step === 9"
       @changeStep="changeStepp"
+      subtitle="What are your favourite things to eat on vacations? Select by tapping up to 3 photos."
+      title="Gourmet food experience or continental breakfast?"
+      class="step flex flex-center"
+      :step="step"
+    >
+      <slider-select
+        :pinFeedSlider="pinFeedGastronomy"
+        :board="'1141944117954577885'"
+        v-model="selectedGastronomy"
+      />
+    </form-step>
+
+    <form-step
+      v-if="step === 10"
+      @changeStep="changeStepp"
+      subtitle="Let us get to know you a little..."
+      title="Are you fancy visiting villages?"
+      class="step flex flex-center"
+      :step="step"
+    >
+      <slider-select
+        :pinFeedSlider="pinFeedVillages"
+        :board="'1141944117954577874'"
+        v-model="selectedVillages"
+      />
+    </form-step>
+    <form-step
+      v-if="step === 11"
+      @changeStep="changeStepp"
       subtitle=""
       title="We created a personalised recommendation for you. Where should we send it?"
       class="step flex flex-center overflow-y q-pt-lg"
+      :valid="email != null && email !== '' && confirmTick"
       :step="step"
     >
       <div class="what-you-get-screen">
-        <email-input v-model="email" class="q-pb-sm" />
+        <email-input v-model:emailas="email" v-model:check="confirmTick" class="q-pb-md" />
         <q-btn
           unelevated
           flat
+          :disabled="!(email != null && email !== '' && confirmTick)"
           class="btn-main q-mb-sm"
           label="Get my travel plan"
           @click="buildReq"
         />
         <what-you-get />
-        <email-input v-model="email" class="q-pb-md" />
+        <email-input v-model:emailas="email" v-model:check="confirmTick" class="q-pb-md" />
       </div>
     </form-step>
   </q-page>
@@ -182,7 +213,7 @@ import emailInput from "components/emailInput.vue";
 import { api, tApi, tourastioApi } from "boot/axios";
 import loadingURL from "assets/animations/loading";
 import SliderSelect from "components/steps/sliderSelect.vue";
-
+import { v4 as uuidv4 } from 'uuid';
 
 //TODO VISA STEP FORMA ISEXTRACTINT I ATSKIRA KOMPONENTA IR SITA PALIKT LABAI TUSCIA
 export default defineComponent({
@@ -209,17 +240,22 @@ export default defineComponent({
     const step = ref(1);
     const selectedPhotos = ref([]);
     const selectedActivities = ref([]);
+    const selectedGastronomy = ref([]);
+    const selectedVillages = ref([]);
     const gender = ref("male");
     const adultAmount = ref(2);
     const childAmount = ref(0);
     const infantAmount = ref(0);
-    const tDuration = ref(1);
+    const tDuration = ref("2");
     const priorities = ref([]);
     const email = ref(null);
     const request = ref(null);
     const pinFeedVisited = ref([]);
     const pinFeedDream = ref([]);
     const pinFeedActivities = ref([]);
+    const pinFeedGastronomy = ref([]);
+    const pinFeedVillages = ref([]);
+    const confirmTick = ref(false);
 
     // const sheetDB = ref(SheetDB);
     const buildReq = async () => {
@@ -230,7 +266,7 @@ export default defineComponent({
 
       const tags = await getTags(photos, true);
       const tags2 = await getTags(photos2, true);
-      const analyzedPhotos = await getTags(visitedPlaces.value, false);
+      const analyzedPhotos = await getTags(visitedPlaces.value, false); // sitas jau turetu but kazkur ??? todo
       let visitedCountriesAnalyzed = analyzedPhotos.data.map((item) => ({
         tags: item.tags,
         country:
@@ -241,14 +277,8 @@ export default defineComponent({
             : " " + Object.keys(JSON.parse(item.locationsCountries))[0],
       }));
 
-      console.log('tags');
-      console.log(tags);
-      console.log(tags2);
-      console.log(visitedCountriesAnalyzed);
-
-
       const req = {
-        id: "",
+        id: uuidv4(),
         email: email.value,
         gender: gender.value,
         duration: tDuration.value,
@@ -261,20 +291,17 @@ export default defineComponent({
         visitedBefore: visitedCountriesAnalyzed.map(place => place.country).join(', '),
         // visitedPlaces: visitedPlaces.value, // take cities and countries out of this one
       };
-      console.log(req);
       request.value = request;
 
-      // const response = await tApi.post("/processRequest", req);
+      const response = await tApi.post("/processRequest", req);
       const d = await api.post("https://pinterest-api.azurewebsites.net/api/google-api?code=i_Nsgoj95MDevkSEnbJg_loKZN89L3kcbcJP_W9P2c9JAzFuK5r9kA==", req);
-      console.log(d);
-      console.log(d);
 
       // console.log(response);
       step.value = 9;
-
+      getRecommendation(req.id);
     };
 
-    const getPinterest = async (board_id) => {
+    const getPinterest = async (board_id, limit = 8, getLoc = true) => {
       const d = await api.post("/pinterest-api", { "board_id" : board_id })
 
       let items = d.data;
@@ -290,26 +317,41 @@ export default defineComponent({
         description: item.description,
         image: item.media.images["600x"].url,
       }));
-      const result = await getTags(items);
-      const withLocation = result.data.filter(
-        (item) =>
-          item.locationsCities.length > 0 ||
-          item.locationsCountries !== "{}"
-      );
-      console.log(withLocation.length);
+      if (getLoc) {
+        const result = await getTags(items);
+        let withLocation = result.data.filter(
+          (item) =>
+            item.locationsCities.length > 0 ||
+            item.locationsCountries !== "{}"
+        )
 
-      return withLocation.slice(0, 10);
+        withLocation = withLocation.map(item => ({ ...item, country: Object.keys(JSON.parse(item.locationsCountries))[0] }))
+
+        let seen = new Set();
+        let withoutDuplicates = withLocation.filter(function(item) {
+          let value = item.country;
+          if (seen.has(value)) {
+            return false;
+          } else {
+            seen.add(value);
+            return true;
+          }
+        });
+
+        return withoutDuplicates.slice(0, limit);
+      } else {
+        return items.slice(0, limit);
+      }
     };
 
 
     const getTags = async (items, analyse = false) => {
-      console.log(items);
       return await tourastioApi.post("/analysePhotos", {
         data: items,
         analyse,
       });
     };
-    const getRecommendation = async (items) => {
+    const getRecommendation = async (id) => {
       // const photos = selectedPhotos.value.map(photo => pinFeed.value.find(item => item.image === photo));
       feedback.value = 'Analyzing your preferences';
       const analyzedPhotos = await getTags(visitedPlaces.value, true);
@@ -318,30 +360,14 @@ export default defineComponent({
           tags: item.tags,
           country: item.locationsCities.length > 0 ? item.locationsCities[0] + ' ' + Object.keys(JSON.parse(item.locationsCountries))[0] : ' ' + Object.keys(JSON.parse(item.locationsCountries))[0]
         }));
-
-      console.log('analyzedPhotos');
-      console.log(analyzedPhotos);
-      console.log(reqArray)
-
-
-      const result = await tourastioApi.post('/recommendCountries', { data: reqArray });
-      console.log(result);
+      const result = await tourastioApi.post('/recommendCountries', { data: reqArray, item_id: id });
       // return result.data;
       return ['s', 's', 's']
     };
 
     const changeStepp = async (valueToIncrement) => {
       const newStep = step.value + valueToIncrement;
-      if (newStep === 9) {
-        // step.value = 0;
-        // const recommendedCountries = await getRecommendation();
-        // step.value = newStep;
-        // const country1 = recommendedCountries[0][0];
-        // const country2 = recommendedCountries[1][0];
-        // const country3 = recommendedCountries[2][0];
-        //
-        // suggestions.value = [country1, country2, country3];
-      }
+
       if (!newStep < 1) {
         step.value = newStep;
         counterStore.setStep(newStep);
@@ -356,15 +382,20 @@ export default defineComponent({
     });
 
     onMounted(async () => {
-      pinFeedVisited.value = await getPinterest('1141944117954581257');
-      pinFeedDream.value = await getPinterest('1141944117954577838');
-      pinFeedActivities.value = await getPinterest('1141944117954581418');
+      pinFeedVisited.value = await getPinterest('1141944117954581257'); // visited places
+      pinFeedDream.value = await getPinterest('1141944117954577838', 20); // city sightseeing
+      pinFeedActivities.value = await getPinterest('1141944117954581418', 20); // experiences
+      pinFeedGastronomy.value = await getPinterest('1141944117954577885', 20, false); // gastronomy
+      pinFeedVillages.value = await getPinterest('1141944117954577874', 20); // villages
     });
 
     return {
+      confirmTick,
       pinFeedVisited,
       pinFeedDream,
       pinFeedActivities,
+      pinFeedGastronomy,
+      pinFeedVillages,
       buildReq,
       feedback,
       loadingAnim,
@@ -375,6 +406,8 @@ export default defineComponent({
       counterStore,
       selectedPhotos,
       selectedActivities,
+      selectedGastronomy,
+      selectedVillages,
       step,
       gender,
       queue,
