@@ -8,7 +8,7 @@
           <h1 v-if="step === 1">{{ title }}</h1>
         </div>
 
-        <h2 v-if="step !== 1">{{ title }} {{ step }}</h2>
+        <h2 v-if="step !== 1">{{ title }}</h2>
         <div v-if="subtitle" class="text-body">{{ subtitle }}</div>
       </div>
     </div>
