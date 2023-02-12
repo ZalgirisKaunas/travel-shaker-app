@@ -196,6 +196,16 @@ to travel for?"
         <email-input v-model:emailas="email" v-model:check="confirmTick" class="q-pb-md" />
       </div>
     </form-step>
+    <form-step
+      v-if="step === 12"
+      @changeStep="changeStepp"
+      subtitle=""
+      title="We created a personalised recommendation for you. Where should we send it?"
+      class="step flex flex-center overflow-y q-pt-lg"
+      :step="step"
+    >
+
+    </form-step>
   </q-page>
 </template>
 
@@ -287,7 +297,7 @@ export default defineComponent({
         infantAmount: infantAmount.value,
         dreamHolidayTags: [...new Set(tags.data.map(tag => tag.tags.map(i => i.name)).flat(1))].join(', '),
         activitiesTags: [...new Set(tags2.data.map(tag => tag.tags.map(i => i.name)).flat(1))].join(', '),
-        priorities: priorities.value,
+        priorities: priorities.value.join(', '),
         visitedBefore: visitedCountriesAnalyzed.map(place => place.country).join(', '),
         // visitedPlaces: visitedPlaces.value, // take cities and countries out of this one
       };
@@ -383,10 +393,10 @@ export default defineComponent({
 
     onMounted(async () => {
       pinFeedVisited.value = await getPinterest('1141944117954581257'); // visited places
-      pinFeedDream.value = await getPinterest('1141944117954577838', 20); // city sightseeing
-      pinFeedActivities.value = await getPinterest('1141944117954581418', 20); // experiences
+      pinFeedDream.value = await getPinterest('1141944117954577838', 20, false); // city sightseeing
+      pinFeedActivities.value = await getPinterest('1141944117954581418', 20, false); // experiences
       pinFeedGastronomy.value = await getPinterest('1141944117954577885', 20, false); // gastronomy
-      pinFeedVillages.value = await getPinterest('1141944117954577874', 20); // villages
+      pinFeedVillages.value = await getPinterest('1141944117954577874', 20, false); // villages
     });
 
     return {

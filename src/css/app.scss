@@ -62,6 +62,12 @@ $primary-font-size: 16px;
     padding-top: 305px !important;
   }
 }
+@media screen and (max-height: 620px) {
+  .q-page-container {
+    height: 92% !important;
+    overflow: scroll !important;
+  }
+}
 
 //.overflow-y {
 //  overflow-y: auto !important;
