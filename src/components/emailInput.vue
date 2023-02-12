@@ -13,19 +13,41 @@ import { defineComponent, ref, watch } from "vue";
 // todo don't allow to proceed without  confirm
 export default defineComponent({
   name: "emailInput",
-  props: ["modelValue"], //added the prop
-  emits: ["update:modelValue"], //component emits the updated prop
+  props: {
+    emailas: {
+      type: String,
+      default: "",
+      required: true,
+    },
+    check: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
+  },
+  emits: ["update:check", 'update:emailas'], //component emits the updated prop
   setup(props, context) {
     const email = ref(null);
     const confirm = ref(false);
     watch(email, () => {
-      context.emit("update:modelValue", email.value); //here's what i did wrong, didn't add the prop name to the event name. adding it fixed it. this works
+      context.emit("update:emailas", email.value);
+    });
+
+    watch(confirm, () => {
+      context.emit("update:check", confirm.value); //here's what i did wrong, didn't add the prop name to the event name. adding it fixed it. this works
     });
 
     watch(
-      () => props.modelValue,
+      () => props.emailas,
       (first, second) => {
-        email.value = props.modelValue;
+        email.value = props.emailas;
+      }
+    );
+
+    watch(
+      () => props.check,
+      (first, second) => {
+        confirm.value = props.check;
       }
     );
 
