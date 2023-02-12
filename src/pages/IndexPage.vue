@@ -315,17 +315,23 @@ export default defineComponent({
       const d = await api.post("/pinterest-api", { "board_id" : board_id })
 
       let items = d.data;
+      console.log(items);
+      console.log(items);
+      console.log(items);
+      console.log(items);
+      console.log(items);
+      console.log(items);
       items = items.filter(
         (i) =>
           i.description !== "" &&
           i.description !== " " &&
           i.media.images &&
-          i.media.images["600x"]
+          i.media.images["400x300"]
       );
       items = items.map((item) => ({
         id: item.id,
         description: item.description,
-        image: item.media.images["600x"].url,
+        image: item.media.images["400x300"].url,
       }));
       if (getLoc) {
         const result = await getTags(items);
