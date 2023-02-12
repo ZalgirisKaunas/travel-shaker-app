@@ -24,7 +24,7 @@
     </form-step>
 
     <form-step
-      v-if="step === 2"
+      v-show="step === 2"
       @changeStep="changeStepp"
       subtitle="It doesn’t have to be that exact place, select similarly looking ones!"
       title="Which places have you visited already?"
@@ -108,7 +108,7 @@ to travel for?"
     </form-step>
 
     <form-step
-      v-if="step === 6"
+      v-show="step === 6"
       @changeStep="changeStepp"
       subtitle="Dream big! We’ll see how we can help."
       title="Which pictures reflect your dream holidays?"
@@ -131,7 +131,7 @@ to travel for?"
     </form-step>
 
     <form-step
-      v-if="step === 8"
+      v-show="step === 8"
       @changeStep="changeStepp"
       subtitle="Let us get to know you a little..."
       title="Which of the experiences are on you bucket list?"
@@ -145,7 +145,7 @@ to travel for?"
       />
     </form-step>
     <form-step
-      v-if="step === 9"
+      v-show="step === 9"
       @changeStep="changeStepp"
       subtitle="What are your favourite things to eat on vacations? Select by tapping up to 3 photos."
       title="Gourmet food experience or continental breakfast?"
@@ -160,7 +160,7 @@ to travel for?"
     </form-step>
 
     <form-step
-      v-if="step === 10"
+      v-show="step === 10"
       @changeStep="changeStepp"
       subtitle="Let us get to know you a little..."
       title="Are you fancy visiting villages?"
@@ -267,51 +267,6 @@ export default defineComponent({
     const pinFeedVillages = ref([]);
     const confirmTick = ref(false);
 
-    // const sheetDB = ref(SheetDB);
-    const buildReq = async () => {
-      step.value = 0;
-      feedback.value = "Analyzing your preferences";
-      const photos = selectedPhotos.value;
-      const photos2 = visitedPlaces.value;
-
-      const tags = await getTags(photos, true);
-      const tags2 = await getTags(photos2, true);
-      const analyzedPhotos = await getTags(visitedPlaces.value, false); // sitas jau turetu but kazkur ??? todo
-      let visitedCountriesAnalyzed = analyzedPhotos.data.map((item) => ({
-        tags: item.tags,
-        country:
-          item.locationsCities.length > 0
-            ? item.locationsCities[0] +
-              " " +
-              Object.keys(JSON.parse(item.locationsCountries))[0]
-            : " " + Object.keys(JSON.parse(item.locationsCountries))[0],
-      }));
-
-      const req = {
-        id: uuidv4(),
-        email: email.value,
-        gender: gender.value,
-        duration: tDuration.value,
-        adultAmount: adultAmount.value,
-        childAmount: childAmount.value,
-        infantAmount: infantAmount.value,
-        dreamHolidayTags: [...new Set(tags.data.map(tag => tag.tags.map(i => i.name)).flat(1))].join(', '),
-        activitiesTags: [...new Set(tags2.data.map(tag => tag.tags.map(i => i.name)).flat(1))].join(', '),
-        priorities: priorities.value.join(', '),
-        visitedBefore: visitedCountriesAnalyzed.map(place => place.country).join(', '),
-        // visitedPlaces: visitedPlaces.value, // take cities and countries out of this one
-      };
-      request.value = request;
-
-      const response = await tApi.post("/processRequest", req);
-      const d = await api.post("https://pinterest-api.azurewebsites.net/api/google-api?code=i_Nsgoj95MDevkSEnbJg_loKZN89L3kcbcJP_W9P2c9JAzFuK5r9kA==", req);
-      // todo check if success
-      // console.log(response);
-      getRecommendation(req.id);
-
-      step.value = 12;
-    };
-
     const getPinterest = async (board_id, limit = 8, getLoc = true, withDescription = false) => {
       const d = await api.post("/pinterest-api", { "board_id" : board_id, withDescription })
 
@@ -365,6 +320,58 @@ export default defineComponent({
       }
     };
 
+    (async () => {
+      pinFeedVisited.value = await getPinterest('1141944117954581257');
+    })()
+
+
+
+    // const sheetDB = ref(SheetDB);
+    const buildReq = async () => {
+      step.value = 0;
+      feedback.value = "Analyzing your preferences";
+      const photos = selectedPhotos.value;
+      const photos2 = visitedPlaces.value;
+
+      const tags = await getTags(photos, true);
+      const tags2 = await getTags(photos2, true);
+      const analyzedPhotos = await getTags(visitedPlaces.value, false); // sitas jau turetu but kazkur ??? todo
+      let visitedCountriesAnalyzed = analyzedPhotos.data.map((item) => ({
+        tags: item.tags,
+        country:
+          item.locationsCities.length > 0
+            ? item.locationsCities[0] +
+              " " +
+              Object.keys(JSON.parse(item.locationsCountries))[0]
+            : " " + Object.keys(JSON.parse(item.locationsCountries))[0],
+      }));
+
+      const req = {
+        id: uuidv4(),
+        email: email.value,
+        gender: gender.value,
+        duration: tDuration.value,
+        adultAmount: adultAmount.value,
+        childAmount: childAmount.value,
+        infantAmount: infantAmount.value,
+        dreamHolidayTags: [...new Set(tags.data.map(tag => tag.tags.map(i => i.name)).flat(1))].join(', '),
+        activitiesTags: [...new Set(tags2.data.map(tag => tag.tags.map(i => i.name)).flat(1))].join(', '),
+        priorities: priorities.value.join(', '),
+        visitedBefore: visitedCountriesAnalyzed.map(place => place.country).join(', '),
+        // visitedPlaces: visitedPlaces.value, // take cities and countries out of this one
+      };
+      request.value = request;
+
+      const response = await tApi.post("/processRequest", req);
+      const d = await api.post("https://pinterest-api.azurewebsites.net/api/google-api?code=i_Nsgoj95MDevkSEnbJg_loKZN89L3kcbcJP_W9P2c9JAzFuK5r9kA==", req);
+      // todo check if success
+      // console.log(response);
+      getRecommendation(req.id);
+
+      step.value = 12;
+    };
+
+
 
     const getTags = async (items, analyse = false) => {
       return await tourastioApi.post("/analysePhotos", {
@@ -403,7 +410,6 @@ export default defineComponent({
     });
 
     onMounted(async () => {
-      pinFeedVisited.value = await getPinterest('1141944117954581257'); // visited places
       pinFeedDream.value = await getPinterest('1141944117954577837', 18, false); // city sightseeing
       pinFeedActivities.value = await getPinterest('1141944117954581418', 18, false); // experiences
       pinFeedGastronomy.value = await getPinterest('1141944117954577885', 18, false); // gastronomy

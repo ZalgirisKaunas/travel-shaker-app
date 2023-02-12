@@ -29,7 +29,7 @@
                 (item) => item.image === slide.image
               ),
             }"
-            :for="'select' + index"
+            :for="index + slide.image + board"
           >
             <input
               type="checkbox"
@@ -40,7 +40,7 @@
               class="d-none"
               v-model="selectedPhotos"
               :value="slide"
-              :id="'select' + index"
+              :id="index + slide.image + board"
             />
             <img class="image" :src="slide.image" />
             <span class="blue-tick"
