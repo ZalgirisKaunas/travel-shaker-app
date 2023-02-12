@@ -315,12 +315,6 @@ export default defineComponent({
       const d = await api.post("/pinterest-api", { "board_id" : board_id })
 
       let items = d.data;
-      console.log(items);
-      console.log(items);
-      console.log(items);
-      console.log(items);
-      console.log(items);
-      console.log(items);
       items = items.filter(
         (i) =>
           i.description !== "" &&
