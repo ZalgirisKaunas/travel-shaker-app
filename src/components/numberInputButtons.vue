@@ -27,7 +27,13 @@ export default defineComponent({
     );
 
     const decrement = () => {
-      number.value--;
+      if (number.value !== 0) {
+        number.value--;
+      }
+
+      if (number.value < 0) {
+        number.value = 0;
+      }
     };
     const incrementVal = () => {
       number.value++;
