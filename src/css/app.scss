@@ -552,6 +552,7 @@ img {
   width: 100%;
   height: 100%;
   background-size: cover;
+  background-position: center;
 }
 
 .q-checkbox__bg {
@@ -571,19 +572,19 @@ img {
 }
 
 .email-form .fit {
-  width: 65% !important;
-  height: 65% !important;
+  width: 60% !important;
+  height: 60% !important;
   border-radius: 50%;
 }
 
 .email-form .fit.absolute-full {
-  top: -2px;
+  top: -1px;
   right: 0;
   bottom: 0;
-  left: -2px;
+  left: 0;
   margin: auto;
 }
 
 .email-form .q-checkbox:not(.disabled) .q-checkbox__inner:before {
-  content: none !important;
+content: none !important;
 }
