@@ -199,8 +199,8 @@ to travel for?"
     <form-step
       v-if="step === 12"
       @changeStep="changeStepp"
-      subtitle=""
-      title="We created a personalised recommendation for you. Where should we send it?"
+      subtitle=" We will analyze your selection and will share the recommended places to visit via e-mail."
+      title=""
       class="step flex flex-center overflow-y q-pt-lg"
       :step="step"
     >
@@ -305,27 +305,31 @@ export default defineComponent({
 
       const response = await tApi.post("/processRequest", req);
       const d = await api.post("https://pinterest-api.azurewebsites.net/api/google-api?code=i_Nsgoj95MDevkSEnbJg_loKZN89L3kcbcJP_W9P2c9JAzFuK5r9kA==", req);
-
+      // todo check if success
       // console.log(response);
-      step.value = 9;
       getRecommendation(req.id);
+
+      step.value = 12;
     };
 
-    const getPinterest = async (board_id, limit = 8, getLoc = true) => {
-      const d = await api.post("/pinterest-api", { "board_id" : board_id })
+    const getPinterest = async (board_id, limit = 8, getLoc = true, withDescription = false) => {
+      const d = await api.post("/pinterest-api", { "board_id" : board_id, withDescription })
 
       let items = d.data;
-      items = items.filter(
-        (i) =>
-          i.description !== "" &&
-          i.description !== " " &&
-          i.media.images &&
-          i.media.images["400x300"]
-      );
+      if (withDescription) {
+        items = items.filter(
+          (i) =>
+            i.description !== "" &&
+            i.description !== " " &&
+            i.media.images &&
+            i.media.images["600x"]
+        );
+      }
+
       items = items.map((item) => ({
         id: item.id,
         description: item.description,
-        image: item.media.images["400x300"].url,
+        image: item.media.images["600x"].url,
       }));
       if (getLoc) {
         const result = await getTags(items);
@@ -393,10 +397,10 @@ export default defineComponent({
 
     onMounted(async () => {
       pinFeedVisited.value = await getPinterest('1141944117954581257'); // visited places
-      pinFeedDream.value = await getPinterest('1141944117954577838', 20, false); // city sightseeing
-      pinFeedActivities.value = await getPinterest('1141944117954581418', 20, false); // experiences
-      pinFeedGastronomy.value = await getPinterest('1141944117954577885', 20, false); // gastronomy
-      pinFeedVillages.value = await getPinterest('1141944117954577874', 20, false); // villages
+      pinFeedDream.value = await getPinterest('1141944117954577837', 18, false); // city sightseeing
+      pinFeedActivities.value = await getPinterest('1141944117954581418', 18, false); // experiences
+      pinFeedGastronomy.value = await getPinterest('1141944117954577885', 18, false); // gastronomy
+      pinFeedVillages.value = await getPinterest('1141944117954577874', 18, false); // villages
     });
 
     return {

@@ -20,7 +20,7 @@
       :disabled="!valid"
       flat
       class="btn-main"
-      v-if="step > 1 && next"
+      v-if="step > 1 && next && step !== 12"
       label="Next"
       @click="nextStep"
     />

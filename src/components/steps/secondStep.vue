@@ -1,5 +1,11 @@
 <template>
+  <div v-if="pinFeedVisited.length === 0" class="q-pa-md q-gutter-xs">
+    <div class="q-gutter-md row justify-center" style="font-size: 2.5em">
+      <q-spinner-puff color="primary" />
+    </div>
+  </div>
   <swiper
+    v-show="pinFeedVisited.length > 0"
     class="visited-countries-select"
     :allowTouchMove="false"
     :slides-per-view="1"
@@ -18,7 +24,7 @@
       ></div>
     </swiper-slide>
   </swiper>
-  <div class="yes-no-buttons flex">
+  <div class="yes-no-buttons flex" v-if="pinFeedVisited.length > 0">
     <q-btn
       unelevated
       flat

@@ -1,5 +1,12 @@
 <template>
-  <div class="swiper-overflow-container">
+
+  <div v-if="pinFeed.length === 0" class="q-pa-md q-gutter-xs">
+    <div class="q-gutter-md row justify-center" style="font-size: 2.5em">
+      <q-spinner-puff color="primary" />
+    </div>
+  </div>
+
+  <div v-else class="swiper-overflow-container">
     <div class="container">
       <swiper
         :slides-per-view="2.2"
