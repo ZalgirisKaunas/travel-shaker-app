@@ -8,14 +8,16 @@
           <h1 v-if="step === 1">{{ title }}</h1>
         </div>
 
-        <h2 v-if="step !== 1">{{ title }}</h2>
+        <h2 v-if="step !== 1">{{ title }} {{ step }}</h2>
         <div v-if="subtitle" class="text-body">{{ subtitle }}</div>
       </div>
     </div>
     <slot />
     <!--    <button v-if="step > 1" @click="prevStep">Previous</button>-->
+
     <q-btn
       unelevated
+      :disabled="!valid"
       flat
       class="btn-main"
       v-if="step > 1 && next"
@@ -45,6 +47,10 @@ export default defineComponent({
     title: {
       type: String,
       required: true,
+    },
+    valid: {
+      type: Boolean,
+      default: true,
     },
     step: {
       type: Number,
