@@ -28,7 +28,7 @@
               type="checkbox"
               :disabled="
                 !selectedPhotos.some((item) => item.image === slide.image) &&
-                selectedPhotos.length >= 3
+                selectedPhotos.length >= 7
               "
               class="d-none"
               v-model="selectedPhotos"
