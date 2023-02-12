@@ -315,7 +315,10 @@ export default defineComponent({
     const getPinterest = async (board_id, limit = 8, getLoc = true, withDescription = false) => {
       const d = await api.post("/pinterest-api", { "board_id" : board_id, withDescription })
 
-      let items = d.data;
+      let items = d.data.items;
+
+      console.log(items);
+
       if (withDescription) {
         items = items.filter(
           (i) =>
@@ -324,12 +327,16 @@ export default defineComponent({
             i.media.images &&
             i.media.images["400x300"]
         );
+      } else {
+        items = items.filter((i) =>
+          i.media.images && i.media.images["400x300"]
+        )
       }
 
       items = items.map((item) => ({
         id: item.id,
         description: item.description,
-        image: item.media.images["400x300"].url,
+        image: item.media.images["600x"].url,
       }));
       if (getLoc) {
         const result = await getTags(items);
