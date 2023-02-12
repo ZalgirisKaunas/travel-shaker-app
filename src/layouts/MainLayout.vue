@@ -1,6 +1,6 @@
 <template>
   <swiper
-    v-if="counterr === 9"
+    v-if="counterr === 11"
     class="hero-swiper desktop-only hero-desktop"
     :slides-per-view="1"
     :pagination="{ clickable: true }"
@@ -21,13 +21,13 @@
 
   <q-layout view="lHh Lpr lFf" class="layout_tourastio">
     <q-header class="bg-transparent">
-      <q-toolbar :class="{ blur: counterr === 9 }" class="text-center">
-        <q-toolbar-title class="text-positive"> Tourastico </q-toolbar-title>
+      <q-toolbar :class="{ blur: counterr === 11 }" class="text-center">
+        <q-toolbar-title class="text-positive"> Travel Shaker </q-toolbar-title>
       </q-toolbar>
 
       <swiper
         class="hero-swiper mobile-hero"
-        v-if="counterr === 9"
+        v-if="counterr === 11"
         :slides-per-view="1"
         :pagination="{ clickable: true }"
         @swiper="onSwiper"
@@ -45,14 +45,14 @@
         </swiper-slide>
       </swiper>
       <q-linear-progress
-        v-if="counterr !== 9"
+        v-if="counterr !== 11"
         :value="progressVal"
         track-color="warning"
         color="black"
       />
     </q-header>
 
-    <q-page-container :class="{ pt: counterr === 9 }">
+    <q-page-container :class="{ pt: counterr === 11 }">
       <router-view />
     </q-page-container>
 
