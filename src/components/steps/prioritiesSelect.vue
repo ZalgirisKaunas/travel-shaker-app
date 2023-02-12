@@ -13,7 +13,6 @@
           <q-checkbox
             v-model="priorities"
             val="sightseeing"
-            tDuration="1"
             unchecked-icon="fa-solid fa-check"
             checked-icon="fa-solid fa-check"
           />
@@ -31,7 +30,6 @@
           <q-checkbox
             v-model="priorities"
             val="nature"
-            tDuration="2"
             unchecked-icon="fa-solid fa-check"
             checked-icon="fa-solid fa-check"
           />
@@ -49,7 +47,6 @@
           <q-checkbox
             v-model="priorities"
             val="cultural"
-            tDuration="3"
             unchecked-icon="fa-solid fa-check"
             checked-icon="fa-solid fa-check"
           />
@@ -67,7 +64,6 @@
           <q-checkbox
             v-model="priorities"
             val="food"
-            tDuration="4"
             unchecked-icon="fa-solid fa-check"
             checked-icon="fa-solid fa-check"
           />
@@ -103,7 +99,6 @@
           <q-checkbox
             v-model="priorities"
             val="family"
-            tDuration="6"
             unchecked-icon="fa-solid fa-check"
             checked-icon="fa-solid fa-check"
           />
