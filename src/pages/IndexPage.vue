@@ -372,7 +372,7 @@ export default defineComponent({
 
     const getTags = async (items, analyse = false) => {
       return await tourastioApi.post("/analysePhotos", {
-        data: items.slice(0, 19),
+        data: items.slice(0, 16),
         analyse,
       });
     };
