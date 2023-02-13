@@ -269,13 +269,10 @@ export default defineComponent({
 
     const getPinterest = async (board_id, limit = 8, getLoc = true, withDescription = false) => {
       const d = await api.post("/pinterest-api", { "board_id" : board_id, withDescription })
-
       let items = d.data.items;
 
-      console.log(items);
-
       if (withDescription) {
-        items = items.filter(
+        items = d.data.filter(
           (i) =>
             i.description !== "" &&
             i.description !== " " &&
@@ -291,7 +288,7 @@ export default defineComponent({
       items = items.map((item) => ({
         id: item.id,
         description: item.description,
-        image: item.media.images["600x"].url,
+        image: item.media.images["400x300"].url,
       }));
       if (getLoc) {
         const result = await getTags(items);
@@ -321,7 +318,7 @@ export default defineComponent({
     };
 
     (async () => {
-      pinFeedVisited.value = await getPinterest('1141944117954581257');
+      pinFeedVisited.value = await getPinterest('1141944117954581257', 8, true, true);
     })()
 
 
@@ -375,7 +372,7 @@ export default defineComponent({
 
     const getTags = async (items, analyse = false) => {
       return await tourastioApi.post("/analysePhotos", {
-        data: items,
+        data: items.slice(0, 19),
         analyse,
       });
     };
