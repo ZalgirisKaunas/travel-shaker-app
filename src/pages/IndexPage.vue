@@ -210,8 +210,8 @@ to travel for?"
 </template>
 
 <script>
-import { computed, defineComponent, onMounted, ref, watchEffect } from "vue";
-import { useCounterStore } from "stores/example-store.js";
+import {computed, defineComponent, onMounted, ref, watchEffect} from "vue";
+import {useCounterStore} from "stores/example-store.js";
 import formStep from "components/formStep.vue";
 import numberInputButtons from "components/numberInputButtons.vue";
 import firstStep from "components/steps/firstStep.vue";
@@ -220,10 +220,10 @@ import genderSelect from "components/steps/genderSelect.vue";
 import prioritiesSelect from "components/steps/prioritiesSelect.vue";
 import whatYouGet from "components/steps/whatYouGet.vue";
 import emailInput from "components/emailInput.vue";
-import { api, tApi, tourastioApi } from "boot/axios";
+import {api, tApi, tourastioApi} from "boot/axios";
 import loadingURL from "assets/animations/loading";
 import SliderSelect from "components/steps/sliderSelect.vue";
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 
 //TODO VISA STEP FORMA ISEXTRACTINT I ATSKIRA KOMPONENTA IR SITA PALIKT LABAI TUSCIA
 export default defineComponent({
@@ -270,7 +270,6 @@ export default defineComponent({
     const getPinterest = async (board_id, limit = 8, getLoc = true, withDescription = false) => {
       const d = await api.post("/pinterest-api", { "board_id" : board_id, withDescription })
       let items = d.data.items;
-
       if (withDescription) {
         items = d.data.filter(
           (i) =>
@@ -280,6 +279,7 @@ export default defineComponent({
             i.media.images["400x300"]
         );
       } else {
+        counterStore.setImg(items[0].media.images.originals.url);
         items = items.filter((i) =>
           i.media.images && i.media.images["400x300"]
         )
@@ -398,6 +398,7 @@ export default defineComponent({
     };
     const counterStore = useCounterStore();
     const counterr = computed(() => counterStore.step);
+
     watchEffect(() => {
       if (anim.value) {
         anim.value.play();

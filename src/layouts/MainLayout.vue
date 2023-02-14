@@ -1,62 +1,41 @@
 <template>
-  <swiper
-    v-if="counterr === 11"
+  <div
+    v-if="counter === 11"
     class="hero-swiper desktop-only hero-desktop"
-    :slides-per-view="1"
-    :pagination="{ clickable: true }"
-    @swiper="onSwiper"
-    @slideChange="onSlideChange"
-    :modules="modules"
   >
-    <swiper-slide class="swiper-slide-hero">
-      <img src="~assets/image2.jpg" />
-    </swiper-slide>
-    <swiper-slide class="swiper-slide-hero">
-      <img src="~assets/image2.jpg" />
-    </swiper-slide>
-    <swiper-slide class="swiper-slide-hero">
-      <img src="~assets/image2.jpg" />
-    </swiper-slide>
-  </swiper>
+    <div class="swiper-slide-hero">
+      <img :src="img" />
+    </div>
+  </div>
 
   <q-layout view="lHh Lpr lFf" class="layout_tourastio">
     <q-header class="bg-transparent">
-      <q-toolbar :class="{ blur: counterr === 11 }" class="text-center">
+      <q-toolbar :class="{ blur: counter === 11 }" class="text-center">
         <q-toolbar-title class="text-positive"> Travel Shaker </q-toolbar-title>
       </q-toolbar>
 
-      <swiper
+      <div
         class="hero-swiper mobile-hero"
-        v-if="counterr === 11"
-        :slides-per-view="1"
-        :pagination="{ clickable: true }"
-        @swiper="onSwiper"
-        @slideChange="onSlideChange"
-        :modules="modules"
+        v-if="counter === 11"
       >
-        <swiper-slide class="swiper-slide-hero">
-          <img src="~assets/image2.jpg" />
-        </swiper-slide>
-        <swiper-slide class="swiper-slide-hero">
-          <img src="~assets/image2.jpg" />
-        </swiper-slide>
-        <swiper-slide class="swiper-slide-hero">
-          <img src="~assets/image2.jpg" />
-        </swiper-slide>
-      </swiper>
+        <div class="swiper-slide-hero">
+          <img :src="img" />
+        </div>
+      </div>
       <q-linear-progress
-        v-if="counterr !== 11"
+        v-if="counter !== 11"
         :value="progressVal"
         track-color="warning"
         color="black"
       />
     </q-header>
 
-    <q-page-container :class="{ pt: counterr === 11 }">
+    <q-page-container :class="{ pt: counter === 11 }">
       <router-view />
     </q-page-container>
 
     <q-footer elevated>
+<!--      privacy-->
       <!--      <q-toolbar>-->
       <!--        <q-toolbar-title>-->
       <!--          <q-avatar>-->
@@ -72,11 +51,7 @@
 <script>
 import { defineComponent, ref, computed } from "vue";
 import { useCounterStore } from "stores/example-store.js";
-import { Swiper, SwiperSlide } from "swiper/vue";
-import "swiper/css/grid";
-import "swiper/css/pagination";
-import "swiper/css";
-import { Pagination } from "swiper";
+// import "swiper/css";
 
 const linksList = [
   {
@@ -125,27 +100,19 @@ const linksList = [
 
 export default defineComponent({
   name: "MainLayout",
-  components: { Swiper, SwiperSlide },
 
   setup() {
     const leftDrawerOpen = ref(true);
     const counterStore = useCounterStore();
-    const counterr = computed(() => counterStore.step);
+    const counter = computed(() => counterStore.step);
+    const img = computed(() => counterStore.img);
     const progressVal = computed(() =>
-      Number((0.1 * (counterr.value - 1)).toFixed(1))
+      Number((0.1 * (counter.value - 1)).toFixed(1))
     );
-    const onSwiper = (swiper) => {
-      console.log(swiper);
-    };
-    const onSlideChange = () => {
-      console.log("slide change");
-    };
 
     return {
-      onSwiper,
-      onSlideChange,
-      modules: [Pagination],
-      counterr,
+      counter,
+      img,
       progressVal,
       essentialLinks: linksList,
       leftDrawerOpen,
