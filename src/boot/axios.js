@@ -10,6 +10,11 @@ import axios from "axios";
 const api = axios.create({
   method: "post",
   baseURL: "https://pinterest-api.azurewebsites.net/api",
+  header: {
+    'Cache-Control': 'no-cache',
+    'Pragma': 'no-cache',
+    'Expires': '0',
+  }
   // method: "get",
   // // withCredentials: true,
   // // crossDomain: true,
