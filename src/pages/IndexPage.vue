@@ -199,6 +199,7 @@ to travel for?"
     <form-step
       v-if="step === 12"
       @changeStep="changeStepp"
+      :headerClass="'success-msg'"
       subtitle=" We will analyze your selection and will share the recommended places to visit via e-mail."
       title=""
       class="step flex flex-center overflow-y q-pt-lg"

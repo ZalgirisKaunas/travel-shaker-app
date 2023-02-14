@@ -1,6 +1,6 @@
 <template class="flex flex-center content-between">
   <div>
-    <div>
+    <div :class="[headerClass]" >
       <div class="form-header">
         <div v-if="step === 1" class="flex happy-users">
           <img src="~assets/stars.png" />
@@ -65,6 +65,11 @@ export default defineComponent({
       default: true,
       required: false,
     },
+    headerClass: {
+      type: String,
+      default: 'hihi',
+      required: false,
+    }
   },
 });
 </script>
