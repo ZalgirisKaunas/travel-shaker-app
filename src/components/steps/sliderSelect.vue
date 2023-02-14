@@ -15,6 +15,15 @@
         :grid="{ rows: 2 }"
         :spaceBetween="10"
         :loop="false"
+        :navigation="true"
+        :freeMode="{
+enabled: true,
+minimumVelocity: 0.01,
+momentum: true,
+momentumBounceRatio: 0.5,
+momentumRatio: 0.5,
+momentumVelocityRatio: 0.5
+}	"
         :pagination="{ clickable: true }"
         :modules="modules"
       >
@@ -58,8 +67,9 @@ import { defineComponent, ref, onMounted, watch } from "vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css/grid";
 import "swiper/css/pagination";
+import "swiper/css/navigation";
 import "swiper/css";
-import { Grid, Pagination } from "swiper";
+import { Grid, Pagination, Navigation, FreeMode } from "swiper";
 import { api, tourastioApi } from "boot/axios";
 
 export default defineComponent({
@@ -89,7 +99,7 @@ export default defineComponent({
     return {
       pinFeed,
       selectedPhotos,
-      modules: [Grid, Pagination],
+      modules: [Grid, Pagination, Navigation, FreeMode],
     };
   },
 });

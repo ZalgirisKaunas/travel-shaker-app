@@ -368,8 +368,6 @@ export default defineComponent({
       step.value = 12;
     };
 
-
-
     const getTags = async (items, analyse = false) => {
       return await tourastioApi.post("/analysePhotos", {
         data: items.slice(0, 16),
