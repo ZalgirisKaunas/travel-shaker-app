@@ -81,18 +81,27 @@ export default defineComponent({
     const pinFeed = ref([]);
     const selectedPhotos = ref([]);
 
+    const shuffleArrayOfObjects = (array) => {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+
     watch(selectedPhotos, () => {
       context.emit("update:modelValue", selectedPhotos.value);
     });
 
     watch(() => props.pinFeedSlider,
       (first, second) => {
-        pinFeed.value = props.pinFeedSlider;
+        pinFeed.value = shuffleArrayOfObjects(props.pinFeedSlider);
       }
     );
 
     onMounted(async () => {
-        pinFeed.value = props.pinFeedSlider;
+        pinFeed.value = shuffleArrayOfObjects(props.pinFeedSlider);
     });
 
 

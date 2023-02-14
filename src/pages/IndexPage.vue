@@ -320,6 +320,8 @@ export default defineComponent({
 
     (async () => {
       pinFeedVisited.value = await getPinterest('1141944117954581257', 8, true, true);
+      pinFeedVillages.value = await getPinterest('1141944117954577874', 18, false); // villages
+
     })()
 
     const buildReq = async () => {
@@ -413,7 +415,6 @@ export default defineComponent({
       pinFeedDream.value = await getPinterest('1141944117954577837', 18, false); // city sightseeing
       pinFeedActivities.value = await getPinterest('1141944117954581418', 18, false); // experiences
       pinFeedGastronomy.value = await getPinterest('1141944117954577885', 18, false); // gastronomy
-      pinFeedVillages.value = await getPinterest('1141944117954577874', 18, false); // villages
     });
 
     return {
