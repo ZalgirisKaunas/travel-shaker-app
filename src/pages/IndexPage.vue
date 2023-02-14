@@ -321,49 +321,52 @@ export default defineComponent({
       pinFeedVisited.value = await getPinterest('1141944117954581257', 8, true, true);
     })()
 
-
-
-    // const sheetDB = ref(SheetDB);
     const buildReq = async () => {
       step.value = 0;
       feedback.value = "Analyzing your preferences";
-      const photos = selectedPhotos.value;
-      const photos2 = visitedPlaces.value;
 
-      const tags = await getTags(photos, true);
-      const tags2 = await getTags(photos2, true);
-      const analyzedPhotos = await getTags(visitedPlaces.value, false); // sitas jau turetu but kazkur ??? todo
-      let visitedCountriesAnalyzed = analyzedPhotos.data.map((item) => ({
-        tags: item.tags,
-        country:
-          item.locationsCities.length > 0
-            ? item.locationsCities[0] +
+      try {
+        const photos = selectedPhotos.value;
+        const photos2 = visitedPlaces.value;
+
+        const tags = await getTags(photos, true);
+        const tags2 = await getTags(photos2, true);
+        const analyzedPhotos = await getTags(visitedPlaces.value, false); // sitas jau turetu but kazkur ??? todo
+        let visitedCountriesAnalyzed = analyzedPhotos.data.map((item) => ({
+          tags: item.tags,
+          country:
+            item.locationsCities.length > 0
+              ? item.locationsCities[0] +
               " " +
               Object.keys(JSON.parse(item.locationsCountries))[0]
-            : " " + Object.keys(JSON.parse(item.locationsCountries))[0],
-      }));
+              : " " + Object.keys(JSON.parse(item.locationsCountries))[0],
+        }));
 
-      const req = {
-        id: uuidv4(),
-        email: email.value,
-        gender: gender.value,
-        duration: tDuration.value,
-        adultAmount: adultAmount.value,
-        childAmount: childAmount.value,
-        infantAmount: infantAmount.value,
-        dreamHolidayTags: [...new Set(tags.data.map(tag => tag.tags.map(i => i.name)).flat(1))].join(', '),
-        activitiesTags: [...new Set(tags2.data.map(tag => tag.tags.map(i => i.name)).flat(1))].join(', '),
-        priorities: priorities.value.join(', '),
-        visitedBefore: visitedCountriesAnalyzed.map(place => place.country).join(', '),
-        // visitedPlaces: visitedPlaces.value, // take cities and countries out of this one
-      };
-      request.value = request;
+        const req = {
+          id: uuidv4(),
+          email: email.value,
+          gender: gender.value,
+          duration: tDuration.value,
+          adultAmount: adultAmount.value,
+          childAmount: childAmount.value,
+          infantAmount: infantAmount.value,
+          dreamHolidayTags: [...new Set(tags.data.map(tag => tag.tags.map(i => i.name)).flat(1))].join(', '),
+          activitiesTags: [...new Set(tags2.data.map(tag => tag.tags.map(i => i.name)).flat(1))].join(', '),
+          priorities: priorities.value.join(', '),
+          visitedBefore: visitedCountriesAnalyzed.map(place => place.country).join(', '),
+          // visitedPlaces: visitedPlaces.value, // take cities and countries out of this one
+        };
+        request.value = request;
 
-      const response = await tApi.post("/processRequest", req);
-      const d = await api.post("https://pinterest-api.azurewebsites.net/api/google-api?code=i_Nsgoj95MDevkSEnbJg_loKZN89L3kcbcJP_W9P2c9JAzFuK5r9kA==", req);
-      // todo check if success
-      // console.log(response);
-      getRecommendation(req.id);
+        const response = await tApi.post("/processRequest", req);
+        const d = await api.post("https://pinterest-api.azurewebsites.net/api/google-api?code=i_Nsgoj95MDevkSEnbJg_loKZN89L3kcbcJP_W9P2c9JAzFuK5r9kA==", req);
+        // todo check if success
+        // console.log(response);
+        getRecommendation(req.id);
+      } catch(e) {
+        console.log(e);
+      }
+
 
       step.value = 12;
     };
