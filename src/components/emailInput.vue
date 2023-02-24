@@ -1,11 +1,11 @@
 <template>
-  <div class="email-form">
+  <form class="email-form" ref="email-form">
     <q-input class="input-text" outlined v-model="email" label="Email" />
     <q-checkbox
       v-model="confirm"
       label="By checking this, you agree get future information from us."
     />
-  </div>
+  </form>
 </template>
 
 <script>

@@ -49,6 +49,7 @@
     <form-step
       v-if="step === 4"
       @changeStep="changeStepp"
+      :valid="adultAmount > 0"
       subtitle="We craft a tailor-made trip for you - free of charge."
       title="What is your group size?"
       class="step flex flex-center"
@@ -85,7 +86,7 @@
     <form-step
       v-if="step === 5"
       @changeStep="changeStepp"
-      subtitle="Weekend getaway of a full long holiday?"
+      subtitle="Weekend getaway or a full long holiday?"
       title="How long would you like
 to travel for?"
       class="step flex flex-center"
@@ -109,6 +110,7 @@ to travel for?"
 
     <form-step
       v-show="step === 6"
+      :valid="selectedPhotos.length > 0"
       @changeStep="changeStepp"
       subtitle="Dream big! We’ll see how we can help."
       title="Which pictures reflect your dream holidays?"
@@ -122,6 +124,7 @@ to travel for?"
     <form-step
       v-if="step === 7"
       @changeStep="changeStepp"
+      :valid="priorities.length > 0"
       subtitle="Choose up to 3 things that you find most important during your vacations."
       title="What are your top priorities when treavelling?"
       class="step flex flex-center"
@@ -133,6 +136,7 @@ to travel for?"
     <form-step
       v-show="step === 8"
       @changeStep="changeStepp"
+      :valid="selectedActivities.length > 0"
       subtitle="Let us get to know you a little..."
       title="Which of the experiences are on you bucket list?"
       class="step flex flex-center"
@@ -147,6 +151,7 @@ to travel for?"
     <form-step
       v-show="step === 9"
       @changeStep="changeStepp"
+      :valid="selectedGastronomy.length > 0"
       subtitle="What are your favourite things to eat on vacations? Select by tapping up to 3 photos."
       title="Gourmet food experience or continental breakfast?"
       class="step flex flex-center"
@@ -183,7 +188,7 @@ to travel for?"
       :step="step"
     >
       <div class="what-you-get-screen">
-        <email-input v-model:emailas="email" v-model:check="confirmTick" class="q-pb-md" />
+        <email-input ref="emailo-form" v-model:emailas="email" v-model:check="confirmTick" class="q-pb-md" />
         <q-btn
           unelevated
           flat
@@ -193,7 +198,7 @@ to travel for?"
           @click="buildReq"
         />
         <what-you-get />
-        <email-input v-model:emailas="email" v-model:check="confirmTick" class="q-pb-md" />
+        <email-input ref="emailo-form" v-model:emailas="email" v-model:check="confirmTick" class="q-pb-md" />
       </div>
     </form-step>
     <form-step
@@ -364,12 +369,10 @@ export default defineComponent({
         const response = await tApi.post("/processRequest", req);
         const d = await api.post("https://pinterest-api.azurewebsites.net/api/google-api?code=i_Nsgoj95MDevkSEnbJg_loKZN89L3kcbcJP_W9P2c9JAzFuK5r9kA==", req);
         // todo check if success
-        // console.log(response);
         getRecommendation(req.id);
       } catch(e) {
         console.log(e);
       }
-
 
       step.value = 12;
     };
