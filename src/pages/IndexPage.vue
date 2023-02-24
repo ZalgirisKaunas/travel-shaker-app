@@ -171,6 +171,7 @@ to travel for?"
       title="Are you fancy visiting villages?"
       class="step flex flex-center"
       :step="step"
+      :valid="selectedVillages.length > 0"
     >
       <slider-select
         :pinFeedSlider="pinFeedVillages"
@@ -188,7 +189,7 @@ to travel for?"
       :step="step"
     >
       <div class="what-you-get-screen">
-        <email-input ref="emailo-form" v-model:emailas="email" v-model:check="confirmTick" class="q-pb-md" />
+        <email-input ref="emailref" v-model:emailas="email" v-model:check="confirmTick" class="q-pb-md" />
         <q-btn
           unelevated
           flat
@@ -198,7 +199,7 @@ to travel for?"
           @click="buildReq"
         />
         <what-you-get />
-        <email-input ref="emailo-form" v-model:emailas="email" v-model:check="confirmTick" class="q-pb-md" />
+        <email-input ref="emailref" v-model:emailas="email" v-model:check="confirmTick" class="q-pb-md" />
       </div>
     </form-step>
     <form-step
@@ -216,7 +217,7 @@ to travel for?"
 </template>
 
 <script>
-import {computed, defineComponent, onMounted, ref, watchEffect} from "vue";
+import {computed, defineComponent, onMounted, ref, watchEffect, getCurrentInstance } from "vue";
 import {useCounterStore} from "stores/example-store.js";
 import formStep from "components/formStep.vue";
 import numberInputButtons from "components/numberInputButtons.vue";
@@ -272,6 +273,8 @@ export default defineComponent({
     const pinFeedGastronomy = ref([]);
     const pinFeedVillages = ref([]);
     const confirmTick = ref(false);
+
+    const emailref = ref(null);
 
     const getPinterest = async (board_id, limit = 8, getLoc = true, withDescription = false) => {
       const d = await api.post("/pinterest-api", { "board_id" : board_id, withDescription })
@@ -418,9 +421,13 @@ export default defineComponent({
       pinFeedDream.value = await getPinterest('1141944117954577837', 18, false); // city sightseeing
       pinFeedActivities.value = await getPinterest('1141944117954581418', 18, false); // experiences
       pinFeedGastronomy.value = await getPinterest('1141944117954577885', 18, false); // gastronomy
+      console.log(emailref.value);
+      // console.log(getCurrentInstance().ctx.$refs.emailref);
+
     });
 
     return {
+      emailref,
       confirmTick,
       pinFeedVisited,
       pinFeedDream,
