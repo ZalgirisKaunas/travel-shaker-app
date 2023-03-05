@@ -189,6 +189,10 @@ to travel for?"
       :step="step"
     >
       <div class="what-you-get-screen">
+        test
+        <a class="travel-affiliate" href="https://tp.media/r?marker=297832&trs=214891&p=6536&u=https%3A%2F%2Fwww.travelshaker.com&campaign_id=344">
+          <img src="~assets/baneris.png" />
+        </a>
         <email-input ref="emailref" v-model:emailas="email" v-model:check="confirmTick" class="q-pb-md" />
         <q-btn
           unelevated
@@ -273,12 +277,13 @@ export default defineComponent({
     const pinFeedGastronomy = ref([]);
     const pinFeedVillages = ref([]);
     const confirmTick = ref(false);
-
     const emailref = ref(null);
 
     const getPinterest = async (board_id, limit = 8, getLoc = true, withDescription = false) => {
+      console.log('get pins');
+      console.log(limit);
       const d = await api.post("/pinterest-api", { "board_id" : board_id, withDescription })
-      let items = d.data.items;
+      let items = d.data;
       if (withDescription) {
         items = d.data.filter(
           (i) =>
@@ -327,7 +332,7 @@ export default defineComponent({
     };
 
     (async () => {
-      pinFeedVisited.value = await getPinterest('1141944117954581257', 8, true, true);
+      pinFeedVisited.value = await getPinterest('1141944117954581257', 19, true, true);
       pinFeedVillages.value = await getPinterest('1141944117954577874', 18, false); // villages
 
     })()
@@ -338,11 +343,15 @@ export default defineComponent({
 
       try {
         const photos = selectedPhotos.value;
-        const photos2 = visitedPlaces.value;
-
-        const tags = await getTags(photos, true);
-        const tags2 = await getTags(photos2, true);
-        const analyzedPhotos = await getTags(visitedPlaces.value, false); // sitas jau turetu but kazkur ??? todo
+        // const photos3 = pinFeedVillages.value;
+        const photos4 = pinFeedActivities.value;
+        const photos5 = pinFeedGastronomy.value;
+        const tags = await getTags(photos, true, '2');
+        // const tags3 = await getTags(photos3, true, '3');
+        const tags4 = await getTags(photos4, true, '4');
+        const tags5 = await getTags(photos5, true, '5');
+        console.log(visitedPlaces.value);
+        const analyzedPhotos = await getTags(visitedPlaces.value, false, 'visited places'); // sitas jau turetu but kazkur ??? todo
         let visitedCountriesAnalyzed = analyzedPhotos.data.map((item) => ({
           tags: item.tags,
           country:
@@ -353,24 +362,36 @@ export default defineComponent({
               : " " + Object.keys(JSON.parse(item.locationsCountries))[0],
         }));
 
+        console.log('priorities.value');
+        console.log(priorities.value.join(', '));
+
         const req = {
           id: uuidv4(),
           email: email.value,
           gender: gender.value,
-          duration: tDuration.value,
+          tripDuration: tDuration.value.toString(),
           adultAmount: adultAmount.value,
           childAmount: childAmount.value,
           infantAmount: infantAmount.value,
-          dreamHolidayTags: [...new Set(tags.data.map(tag => tag.tags.map(i => i.name)).flat(1))].join(', '),
-          activitiesTags: [...new Set(tags2.data.map(tag => tag.tags.map(i => i.name)).flat(1))].join(', '),
           priorities: priorities.value.join(', '),
+          dreamHolidayTags: [...new Set(tags.data.map(tag => tag.tags.map(i => i.name)).flat(1))].join(', '),
+          gastronomyTags: [...new Set(tags5.data.map(tag => tag.tags.map(i => i.name)).flat(1))].join(', '),
+          activitiesTags: [...new Set(tags4.data.map(tag => tag.tags.map(i => i.name)).flat(1))].join(', '),
+
           visitedBefore: visitedCountriesAnalyzed.map(place => place.country).join(', '),
           // visitedPlaces: visitedPlaces.value, // take cities and countries out of this one
         };
         request.value = request;
 
+        console.log('request');
+        console.log(request);
+
         const response = await tApi.post("/processRequest", req);
         const d = await api.post("https://pinterest-api.azurewebsites.net/api/google-api?code=i_Nsgoj95MDevkSEnbJg_loKZN89L3kcbcJP_W9P2c9JAzFuK5r9kA==", req);
+
+        console.log(d);
+        console.log(d);
+
         // todo check if success
         getRecommendation(req.id);
       } catch(e) {
@@ -380,7 +401,14 @@ export default defineComponent({
       step.value = 12;
     };
 
-    const getTags = async (items, analyse = false) => {
+    const getTags = async (items, analyse = false, debug) => {
+      console.log(debug);
+      console.log(items);
+
+      if (!items) {
+        return { data: [] }
+      }
+
       return await tourastioApi.post("/analysePhotos", {
         data: items.slice(0, 16),
         analyse,
@@ -421,7 +449,7 @@ export default defineComponent({
       pinFeedDream.value = await getPinterest('1141944117954577837', 18, false); // city sightseeing
       pinFeedActivities.value = await getPinterest('1141944117954581418', 18, false); // experiences
       pinFeedGastronomy.value = await getPinterest('1141944117954577885', 18, false); // gastronomy
-      console.log(emailref.value);
+      // console.log(emailref.value);
       // console.log(getCurrentInstance().ctx.$refs.emailref);
 
     });

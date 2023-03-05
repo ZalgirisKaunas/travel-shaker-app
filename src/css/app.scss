@@ -129,6 +129,13 @@ button {
   height: 56px;
 }
 
+.travel-affiliate img {
+  height: 150px;
+  width: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 .btn-main {
   background-color: $primary;
   color: white;
