@@ -189,7 +189,6 @@ to travel for?"
       :step="step"
     >
       <div class="what-you-get-screen">
-        test
         <a class="travel-affiliate" href="https://tp.media/r?marker=297832&trs=214891&p=6536&u=https%3A%2F%2Fwww.travelshaker.com&campaign_id=344">
           <img src="~assets/baneris.png" />
         </a>
@@ -280,8 +279,6 @@ export default defineComponent({
     const emailref = ref(null);
 
     const getPinterest = async (board_id, limit = 8, getLoc = true, withDescription = false) => {
-      console.log('get pins');
-      console.log(limit);
       const d = await api.post("/pinterest-api", { "board_id" : board_id, withDescription })
       let items = d.data;
       if (withDescription) {
@@ -315,6 +312,7 @@ export default defineComponent({
         withLocation = withLocation.map(item => ({ ...item, country: Object.keys(JSON.parse(item.locationsCountries))[0] }))
 
         let seen = new Set();
+
         let withoutDuplicates = withLocation.filter(function(item) {
           let value = item.country;
           if (seen.has(value)) {
@@ -325,14 +323,25 @@ export default defineComponent({
           }
         });
 
+        if (!limit) {
+          return withoutDuplicates;
+        }
+
         return withoutDuplicates.slice(0, limit);
       } else {
+        if (!limit) {
+          return items;
+        }
+
         return items.slice(0, limit);
       }
     };
 
     (async () => {
-      pinFeedVisited.value = await getPinterest('1141944117954581257', 19, true, true);
+      pinFeedVisited.value = await getPinterest('1141944117954581257', false, true, true);
+      console.log(pinFeedVisited.value.length);
+      console.log(pinFeedVisited.value.length);
+      console.log(pinFeedVisited.value.length);
       pinFeedVillages.value = await getPinterest('1141944117954577874', 18, false); // villages
 
     })()
@@ -350,7 +359,6 @@ export default defineComponent({
         // const tags3 = await getTags(photos3, true, '3');
         const tags4 = await getTags(photos4, true, '4');
         const tags5 = await getTags(photos5, true, '5');
-        console.log(visitedPlaces.value);
         const analyzedPhotos = await getTags(visitedPlaces.value, false, 'visited places'); // sitas jau turetu but kazkur ??? todo
         let visitedCountriesAnalyzed = analyzedPhotos.data.map((item) => ({
           tags: item.tags,

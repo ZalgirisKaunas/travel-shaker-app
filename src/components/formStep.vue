@@ -12,6 +12,11 @@
         <div v-if="subtitle" class="text-body">{{ subtitle }}</div>
       </div>
     </div>
+    <div v-if="step === 12">
+      <a class="travel-affiliate" href="https://tp.media/r?marker=297832&trs=214891&p=6536&u=https%3A%2F%2Fwww.travelshaker.com&campaign_id=344">
+        <img src="~assets/baneris.png" />
+      </a>
+    </div>
     <slot />
     <!--    <button v-if="step > 1" @click="prevStep">Previous</button>-->
 
