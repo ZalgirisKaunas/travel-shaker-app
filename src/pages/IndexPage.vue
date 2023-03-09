@@ -386,10 +386,10 @@ export default defineComponent({
           childAmount: childAmount.value,
           infantAmount: infantAmount.value,
           priorities: priorities.value.join(', '),
-          dreamHolidayTags: dreamHolidayTags.value,
-          gastronomyTags: gastronomyTags.value,
-          activitiesTags: activitiesTags.value,
-          visitedBefore: visitedCountriesAnalyzed.map(place => place.country).join(', '),
+          dreamHolidayTags: JSON.stringify(dreamHolidayTags.value),
+          gastronomyTags: JSON.stringify(gastronomyTags.value),
+          activitiesTags: JSON.stringify(activitiesTags.value),
+          visitedBefore: JSON.stringify(visitedCountriesAnalyzed.map(place => place.country).join(', ')),
           // visitedPlaces: visitedPlaces.value, // take cities and countries out of this one
         };
 
