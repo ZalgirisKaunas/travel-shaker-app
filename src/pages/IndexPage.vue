@@ -394,7 +394,7 @@ export default defineComponent({
         console.log('request');
         console.log(request);
 
-        const response = await tApi.post("/processRequest", req);
+        // const response = await tApi.post("/processRequest", req);
         const d = await api.post("https://pinterest-api.azurewebsites.net/api/google-api?code=i_Nsgoj95MDevkSEnbJg_loKZN89L3kcbcJP_W9P2c9JAzFuK5r9kA==", req);
 
         console.log(d);
