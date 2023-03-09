@@ -312,11 +312,29 @@ export default defineComponent({
             item.locationsCities.length > 0 ||
             item.locationsCountries !== "{}"
         )
-        withLocation = withLocation.map(item => ({ ...item, country: Object.keys(JSON.parse(item.locationsCountries))[0] }))
+        // withLocation = withLocation.map(item => ({ ...item, country: Object.keys(JSON.parse(item.locationsCountries))[0] }))
+
+        try {
+          withLocation = withLocation.map(item => {
+            if (!item.locationsCountries) {
+              throw new Error("locationsCountries property is missing.");
+            }
+            const countriesObj = JSON.parse(item.locationsCountries);
+            if (!countriesObj || typeof countriesObj !== "object") {
+              throw new Error("locationsCountries property is not a valid JSON object.");
+            }
+            const country = Object.keys(countriesObj)[0];
+            if (!country) {
+              throw new Error("No country found in the locationsCountries object.");
+            }
+            return { ...item, country };
+          });
+        } catch (error) {
+          console.error("Error parsing locationsCountries property:", error);
+        }
+
 
         let seen = new Set();
-
-
         let withoutDuplicates = withLocation.filter(function(item) {
           let value = item.country;
           if (seen.has(value)) {
