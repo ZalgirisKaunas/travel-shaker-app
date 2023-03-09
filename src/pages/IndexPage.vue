@@ -111,7 +111,7 @@ to travel for?"
     <form-step
       v-show="step === 6"
       :valid="selectedPhotos.length > 0"
-      @changeStep="changeStepp"
+      @changeStep="changeStepp(1, 'selectedPhotos')"
       subtitle="Dream big! We’ll see how we can help."
       title="Which pictures reflect your dream holidays?"
       class="step flex flex-center"
@@ -135,7 +135,7 @@ to travel for?"
 
     <form-step
       v-show="step === 8"
-      @changeStep="changeStepp"
+      @changeStep="changeStepp(1, 'pinFeedActivities')"
       :valid="selectedActivities.length > 0"
       subtitle="Let us get to know you a little..."
       title="Which of the experiences are on you bucket list?"
@@ -150,7 +150,7 @@ to travel for?"
     </form-step>
     <form-step
       v-show="step === 9"
-      @changeStep="changeStepp"
+      @changeStep="changeStepp(1, 'pinFeedGastronomy')"
       :valid="selectedGastronomy.length > 0"
       subtitle="What are your favourite things to eat on vacations? Select by tapping up to 3 photos."
       title="Gourmet food experience or continental breakfast?"
@@ -278,6 +278,10 @@ export default defineComponent({
     const confirmTick = ref(false);
     const emailref = ref(null);
 
+    const dreamHolidayTags = ref([]);
+    const gastronomyTags = ref([]);
+    const activitiesTags = ref([]);
+
     const getPinterest = async (board_id, limit = 8, getLoc = true, withDescription = false) => {
       const d = await api.post("/pinterest-api", { "board_id" : board_id, withDescription })
       let items = d.data;
@@ -354,14 +358,14 @@ export default defineComponent({
       feedback.value = "Analyzing your preferences";
 
       try {
-        const photos = selectedPhotos.value;
+        // const photos = selectedPhotos.value;
         // const photos3 = pinFeedVillages.value;
-        const photos4 = pinFeedActivities.value;
-        const photos5 = pinFeedGastronomy.value;
-        const tags = await getTags(photos, true, '2');
+        // const photos4 = pinFeedActivities.value;
+        // const photos5 = pinFeedGastronomy.value;
+        // const tags = await getTags(photos, true, '2');
         // const tags3 = await getTags(photos3, true, '3');
-        const tags4 = await getTags(photos4, true, '4');
-        const tags5 = await getTags(photos5, true, '5');
+        // const tags4 = await getTags(photos4, true, '4');
+        // const tags5 = await getTags(photos5, true, '5');
         const analyzedPhotos = await getTags(visitedPlaces.value, false, 'visited places'); // sitas jau turetu but kazkur ??? todo
         let visitedCountriesAnalyzed = analyzedPhotos.data.map((item) => ({
           tags: item.tags,
@@ -369,12 +373,9 @@ export default defineComponent({
             item.locationsCities.length > 0
               ? item.locationsCities[0] +
               " " +
-              Object.keys(JSON.parse(item.locationsCountries))[0]
-              : " " + Object.keys(JSON.parse(item.locationsCountries))[0],
+              Object.keys(item.locationsCountries)[0]
+              : " " + Object.keys(item.locationsCountries)[0],
         }));
-
-        console.log('priorities.value');
-        console.log(priorities.value.join(', '));
 
         const req = {
           id: uuidv4(),
@@ -385,23 +386,21 @@ export default defineComponent({
           childAmount: childAmount.value,
           infantAmount: infantAmount.value,
           priorities: priorities.value.join(', '),
-          dreamHolidayTags: [...new Set(tags.data.map(tag => tag.tags.map(i => i.name)).flat(1))].join(', '),
-          gastronomyTags: [...new Set(tags5.data.map(tag => tag.tags.map(i => i.name)).flat(1))].join(', '),
-          activitiesTags: [...new Set(tags4.data.map(tag => tag.tags.map(i => i.name)).flat(1))].join(', '),
-
+          dreamHolidayTags: dreamHolidayTags.value,
+          gastronomyTags: gastronomyTags.value,
+          activitiesTags: activitiesTags.value,
           visitedBefore: visitedCountriesAnalyzed.map(place => place.country).join(', '),
           // visitedPlaces: visitedPlaces.value, // take cities and countries out of this one
         };
-        request.value = request;
 
         console.log('request');
-        console.log(request);
+        console.log(req);
 
         const d = await api.post("https://pinterest-api.azurewebsites.net/api/google-api?code=i_Nsgoj95MDevkSEnbJg_loKZN89L3kcbcJP_W9P2c9JAzFuK5r9kA==", req);
         const response = await api.post("/processRequest", req);
-
         console.log(d);
-        console.log(d);
+        console.log(response);
+        request.value = request;
 
         // todo check if success
         getRecommendation(req.id);
@@ -412,6 +411,44 @@ export default defineComponent({
       step.value = 12;
     };
 
+    const getTagsBg = (slider, analyse = false, debug) => {
+      // console.log(window[slider]); // undefined
+
+      let items;
+      if (slider === 'selectedPhotos') {
+        items = selectedPhotos.value;
+      }
+
+      if (slider === 'pinFeedActivities') {
+        items = pinFeedActivities.value;
+      }
+      if (slider === 'pinFeedGastronomy') {
+        items = pinFeedGastronomy.value;
+      }
+      if (!items) {
+        return { data: [] }
+      }
+
+      try {
+        tourastioApi.post("/analysePhotos", {
+          data: items.slice(0, 16),
+          analyse,
+        }).then((data) => {
+          const d = [...new Set(data.data.map(tag => tag.tags.map(i => i.name)).flat(1))].join(', ');
+          if (slider === 'selectedPhotos') {
+            dreamHolidayTags.value = d;
+          } else if (slider === 'pinFeedActivities') {
+            activitiesTags.value = d;
+          } else if (slider === 'pinFeedGastronomy') {
+            gastronomyTags.value = d;
+          }
+
+          console.log(d);
+        });
+      } catch (e) {
+
+      }
+    };
     const getTags = async (items, analyse = false, debug) => {
       console.log(debug);
       console.log(items);
@@ -439,11 +476,21 @@ export default defineComponent({
       return ['s', 's', 's']
     };
 
-    const changeStepp = async (valueToIncrement) => {
+    const changeStepp = async (valueToIncrement, slider = null) => {
       const newStep = step.value + valueToIncrement;
 
       if (!newStep < 1) {
+        console.log(newStep);
+
+        if (slider) {
+          console.log(slider);
+          getTagsBg(slider, true);
+        }
+
         step.value = newStep;
+
+        console.log(step.value);
+
         counterStore.setStep(newStep);
       }
     };
