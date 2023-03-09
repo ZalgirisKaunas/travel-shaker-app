@@ -312,24 +312,26 @@ export default defineComponent({
             item.locationsCities.length > 0 ||
             item.locationsCountries !== "{}"
         )
-
-        console.log('withLocation');
-        console.log(withLocation);
-
         withLocation = withLocation.map(item => ({ ...item, country: Object.keys(item.locationsCountries)[0] }))
 
         let seen = new Set();
 
-        let withoutDuplicates = withLocation.filter(function(item) {
-          let value = item.country;
-          if (seen.has(value)) {
-            return false;
-          } else {
-            seen.add(value);
-            return true;
-          }
-        });
+        console.log(withLocation.length);
+        console.log(withLocation.length);
+        const withoutDuplicates = withLocation;
 
+        // let withoutDuplicates = withLocation.filter(function(item) {
+        //   let value = item.country;
+        //   if (seen.has(value)) {
+        //     return false;
+        //   } else {
+        //     seen.add(value);
+        //     return true;
+        //   }
+        // });
+
+        console.log(withoutDuplicates.length);
+        console.log(withoutDuplicates.length);
         if (!limit) {
           return withoutDuplicates;
         }
@@ -340,6 +342,8 @@ export default defineComponent({
           return items;
         }
 
+        console.log(withoutDuplicates.length);
+        console.log(withoutDuplicates.length);
         return items.slice(0, limit);
       }
     };
@@ -349,7 +353,7 @@ export default defineComponent({
       console.log(pinFeedVisited.value.length);
       console.log(pinFeedVisited.value.length);
       console.log(pinFeedVisited.value.length);
-      pinFeedVillages.value = await getPinterest('1141944117954577874', 18, false); // villages
+      // pinFeedVillages.value = await getPinterest('1141944117954577874', 18, false); // villages
 
     })()
 
@@ -480,17 +484,12 @@ export default defineComponent({
       const newStep = step.value + valueToIncrement;
 
       if (!newStep < 1) {
-        console.log(newStep);
 
         if (slider) {
-          console.log(slider);
           getTagsBg(slider, true);
         }
 
         step.value = newStep;
-
-        console.log(step.value);
-
         counterStore.setStep(newStep);
       }
     };
@@ -504,9 +503,9 @@ export default defineComponent({
     });
 
     onMounted(async () => {
-      pinFeedDream.value = await getPinterest('1141944117954577837', 18, false); // city sightseeing
-      pinFeedActivities.value = await getPinterest('1141944117954581418', 18, false); // experiences
-      pinFeedGastronomy.value = await getPinterest('1141944117954577885', 18, false); // gastronomy
+      // pinFeedDream.value = await getPinterest('1141944117954577837', 18, false); // city sightseeing
+      // pinFeedActivities.value = await getPinterest('1141944117954581418', 18, false); // experiences
+      // pinFeedGastronomy.value = await getPinterest('1141944117954577885', 18, false); // gastronomy
       // console.log(emailref.value);
       // console.log(getCurrentInstance().ctx.$refs.emailref);
 
