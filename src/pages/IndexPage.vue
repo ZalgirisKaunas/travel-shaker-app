@@ -309,7 +309,10 @@ export default defineComponent({
             item.locationsCountries !== "{}"
         )
 
-        withLocation = withLocation.map(item => ({ ...item, country: Object.keys(JSON.parse(item.locationsCountries))[0] }))
+        console.log('withLocation');
+        console.log(withLocation);
+
+        withLocation = withLocation.map(item => ({ ...item, country: Object.keys(item.locationsCountries)[0] }))
 
         let seen = new Set();
 
