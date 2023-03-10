@@ -19,7 +19,6 @@
     </div>
     <slot />
     <!--    <button v-if="step > 1" @click="prevStep">Previous</button>-->
-
     <q-btn
       unelevated
       :disabled="!valid"

@@ -126,7 +126,7 @@ to travel for?"
       @changeStep="changeStepp"
       :valid="priorities.length > 0"
       subtitle="Choose up to 3 things that you find most important during your vacations."
-      title="What are your top priorities when treavelling?"
+      title="What are your top priorities when travelling?"
       class="step flex flex-center"
       :step="step"
     >
@@ -185,18 +185,20 @@ to travel for?"
       subtitle=""
       title="We created a personalised recommendation for you. Where should we send it?"
       class="step flex flex-center overflow-y q-pt-lg"
-      :valid="email != null && email !== '' && confirmTick"
+      :valid="email != null && email !== ''"
       :step="step"
     >
+<!--TODO      :valid="email != null && email !== '' && confirmTick"-->
       <div class="what-you-get-screen">
-        <a class="travel-affiliate" href="https://tp.media/r?marker=297832&trs=214891&p=6536&u=https%3A%2F%2Fwww.travelshaker.com&campaign_id=344">
-          <img src="~assets/baneris.png" />
-        </a>
+<!--        <a class="travel-affiliate" href="https://tp.media/r?marker=297832&trs=214891&p=6536&u=https%3A%2F%2Fwww.travelshaker.com&campaign_id=344">-->
+<!--          <img src="~assets/baneris.png" />-->
+<!--        </a>-->
         <email-input ref="emailref" v-model:emailas="email" v-model:check="confirmTick" class="q-pb-md" />
+        <!--TODO      :valid="email != null && email !== '' && confirmTick"-->
         <q-btn
           unelevated
           flat
-          :disabled="!(email != null && email !== '' && confirmTick)"
+          :disabled="!(email != null && email !== '')"
           class="btn-main q-mb-sm"
           label="Get my travel plan"
           @click="buildReq"
@@ -415,6 +417,7 @@ export default defineComponent({
 
     const getTagsBg = (slider, analyse = false, debug) => {
       // console.log(window[slider]); // undefined
+      console.clear();
 
       let items;
       if (slider === 'visited') {
@@ -430,7 +433,11 @@ export default defineComponent({
       if (slider === 'pinFeedGastronomy') {
         items = pinFeedGastronomy.value;
       }
+
+      console.log('get tags bg')
+
       if (!items) {
+        console.log('empty');
         return { data: [] }
       }
 
@@ -439,6 +446,7 @@ export default defineComponent({
           data: items.slice(0, 16),
           analyse,
         }).then((data) => {
+
           const d = [...new Set(data.data.map(tag => tag.tags.map(i => i.name)).flat(1))].join(', ');
           if (slider === 'selectedPhotos') {
             dreamHolidayTags.value = d;
@@ -446,11 +454,10 @@ export default defineComponent({
             activitiesTags.value = d;
           } else if (slider === 'pinFeedGastronomy') {
             gastronomyTags.value = d;
-          } else if (slider.value === 'visited') {
-            visitedTags.value = d;
+          } else if (slider === 'visited') {
+            visitedTags.value = data;
           }
 
-          console.log(d);
         });
       } catch (e) {
 
@@ -470,8 +477,9 @@ export default defineComponent({
       // const photos = selectedPhotos.value.map(photo => pinFeed.value.find(item => item.image === photo));
       feedback.value = 'Analyzing your preferences';
       const analyzedPhotos = visitedTags.value;
-
-      let reqArray = analyzedPhotos
+      // const analyzedPhotos = await getTags(visitedPlaces.value, true);
+      // let reqArray = analyzedPhotos.data
+      let reqArray = analyzedPhotos.data
         .map(item => ({
           tags: item.tags,
           country: item.locationsCities.length > 0 ? item.locationsCities[0] + ' ' + Object.keys(JSON.parse(item.locationsCountries))[0] : ' ' + Object.keys(JSON.parse(item.locationsCountries))[0]
@@ -486,8 +494,6 @@ export default defineComponent({
       if (!newStep < 1) {
 
         if (slider) {
-          console.log(slider);
-
           getTagsBg(slider, true);
         }
 

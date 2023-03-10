@@ -1,10 +1,10 @@
 <template>
   <form class="email-form" ref="email-form">
     <q-input class="input-text" outlined v-model="email" label="Email" />
-    <q-checkbox
-      v-model="confirm"
-      label="By checking this, you agree get future information from us."
-    />
+<!--    <q-checkbox-->
+<!--      v-model="confirm"-->
+<!--      label="By checking this, you agree get future information from us."-->
+<!--    />-->
   </form>
 </template>
 
@@ -21,7 +21,7 @@ export default defineComponent({
     },
     check: {
       type: Boolean,
-      default: false,
+      default: true, // todo false
       required: true,
     },
   },
@@ -33,9 +33,9 @@ export default defineComponent({
       context.emit("update:emailas", email.value);
     });
 
-    watch(confirm, () => {
-      context.emit("update:check", confirm.value); //here's what i did wrong, didn't add the prop name to the event name. adding it fixed it. this works
-    });
+    // watch(confirm, () => {
+    //   context.emit("update:check", confirm.value); //here's what i did wrong, didn't add the prop name to the event name. adding it fixed it. this works
+    // });
 
     watch(
       () => props.emailas,
@@ -44,12 +44,12 @@ export default defineComponent({
       }
     );
 
-    watch(
-      () => props.check,
-      (first, second) => {
-        confirm.value = props.check;
-      }
-    );
+    // watch(
+    //   () => props.check,
+    //   (first, second) => {
+    //     confirm.value = props.check;
+    //   }
+    // );
 
     return { email, confirm };
   },
