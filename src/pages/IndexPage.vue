@@ -32,7 +32,7 @@
       :next="false"
       :step="step"
     >
-      <second-step v-model="visitedPlaces" :pinFeed="pinFeedVisited" @changeStep="changeStepp" />
+      <second-step v-model="visitedPlaces" :pinFeed="pinFeedVisited" @changeStep="changeStepp(1,'visited')" />
     </form-step>
 
     <form-step
@@ -281,6 +281,7 @@ export default defineComponent({
     const dreamHolidayTags = ref([]);
     const gastronomyTags = ref([]);
     const activitiesTags = ref([]);
+    const visitedTags = ref([]);
 
     const getPinterest = async (board_id, limit = 8, getLoc = true, withDescription = false) => {
       const d = await api.post("/pinterest-api", { "board_id" : board_id, withDescription })
@@ -432,6 +433,9 @@ export default defineComponent({
       // console.log(window[slider]); // undefined
 
       let items;
+      if (slider === 'visited') {
+        items = visitedPlaces.value;
+      }
       if (slider === 'selectedPhotos') {
         items = selectedPhotos.value;
       }
@@ -458,6 +462,8 @@ export default defineComponent({
             activitiesTags.value = d;
           } else if (slider === 'pinFeedGastronomy') {
             gastronomyTags.value = d;
+          } else if (slider.value === 'visited') {
+            visitedTags.value = d;
           }
 
           console.log(d);
@@ -482,7 +488,9 @@ export default defineComponent({
     const getRecommendation = async (id) => {
       // const photos = selectedPhotos.value.map(photo => pinFeed.value.find(item => item.image === photo));
       feedback.value = 'Analyzing your preferences';
-      const analyzedPhotos = await getTags(visitedPlaces.value, true);
+      const analyzedPhotos = visitedTags.value;
+      console.log('analyzedPhotos.value');
+      console.log(analyzedPhotos.value);
       let reqArray = analyzedPhotos.data
         .map(item => ({
           tags: item.tags,
@@ -496,9 +504,18 @@ export default defineComponent({
     const changeStepp = async (valueToIncrement, slider = null) => {
       const newStep = step.value + valueToIncrement;
 
+      console.log('newstep')
+      console.log('newstep')
+      console.log('newstep')
+      console.log('newstep')
+
       if (!newStep < 1) {
 
         if (slider) {
+          console.log(slider);
+          console.log(slider);
+          console.log(slider);
+          console.log(slider);
           getTagsBg(slider, true);
         }
 
