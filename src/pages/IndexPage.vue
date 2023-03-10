@@ -471,7 +471,7 @@ export default defineComponent({
       feedback.value = 'Analyzing your preferences';
       const analyzedPhotos = visitedTags.value;
 
-      let reqArray = analyzedPhotos.data
+      let reqArray = analyzedPhotos
         .map(item => ({
           tags: item.tags,
           country: item.locationsCities.length > 0 ? item.locationsCities[0] + ' ' + Object.keys(JSON.parse(item.locationsCountries))[0] : ' ' + Object.keys(JSON.parse(item.locationsCountries))[0]
