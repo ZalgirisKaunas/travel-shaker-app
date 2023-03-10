@@ -313,8 +313,6 @@ export default defineComponent({
             item.locationsCities.length > 0 ||
             item.locationsCountries !== "{}"
         )
-        // withLocation = withLocation.map(item => ({ ...item, country: Object.keys(JSON.parse(item.locationsCountries))[0] }))
-
         try {
           withLocation = withLocation.map(item => {
             if (!item.locationsCountries) {
@@ -333,8 +331,6 @@ export default defineComponent({
         } catch (error) {
           console.error("Error parsing locationsCountries property:", error);
         }
-
-
         let seen = new Set();
         let withoutDuplicates = withLocation.filter(function(item) {
           let value = item.country;
@@ -346,7 +342,7 @@ export default defineComponent({
           }
         });
 
-        console.log(withoutDuplicates.length);
+        console.log('withoutDuplicates.length');
         console.log(withoutDuplicates.length);
         if (!limit) {
           return withoutDuplicates;
@@ -364,11 +360,7 @@ export default defineComponent({
 
     (async () => {
       pinFeedVisited.value = await getPinterest('1141944117954581257', false, true, true);
-      console.log(pinFeedVisited.value.length);
-      console.log(pinFeedVisited.value.length);
-      console.log(pinFeedVisited.value.length);
       pinFeedVillages.value = await getPinterest('1141944117954577874', 18, false); // villages
-
     })()
 
     const buildReq = async () => {
@@ -376,14 +368,6 @@ export default defineComponent({
       feedback.value = "Analyzing your preferences";
 
       try {
-        // const photos = selectedPhotos.value;
-        // const photos3 = pinFeedVillages.value;
-        // const photos4 = pinFeedActivities.value;
-        // const photos5 = pinFeedGastronomy.value;
-        // const tags = await getTags(photos, true, '2');
-        // const tags3 = await getTags(photos3, true, '3');
-        // const tags4 = await getTags(photos4, true, '4');
-        // const tags5 = await getTags(photos5, true, '5');
         const analyzedPhotos = await getTags(visitedPlaces.value, false, 'visited places'); // sitas jau turetu but kazkur ??? todo
         let visitedCountriesAnalyzed = analyzedPhotos.data.map((item) => ({
           tags: item.tags,
@@ -473,15 +457,12 @@ export default defineComponent({
       }
     };
     const getTags = async (items, analyse = false, debug) => {
-      console.log(debug);
-      console.log(items);
-
       if (!items) {
         return { data: [] }
       }
 
       return await tourastioApi.post("/analysePhotos", {
-        data: items.slice(0, 16),
+        data: items.slice(0, 85),
         analyse,
       });
     };
@@ -489,8 +470,7 @@ export default defineComponent({
       // const photos = selectedPhotos.value.map(photo => pinFeed.value.find(item => item.image === photo));
       feedback.value = 'Analyzing your preferences';
       const analyzedPhotos = visitedTags.value;
-      console.log('analyzedPhotos.value');
-      console.log(analyzedPhotos.value);
+
       let reqArray = analyzedPhotos.data
         .map(item => ({
           tags: item.tags,
@@ -503,19 +483,11 @@ export default defineComponent({
 
     const changeStepp = async (valueToIncrement, slider = null) => {
       const newStep = step.value + valueToIncrement;
-
-      console.log('newstep')
-      console.log('newstep')
-      console.log('newstep')
-      console.log('newstep')
-
       if (!newStep < 1) {
 
         if (slider) {
           console.log(slider);
-          console.log(slider);
-          console.log(slider);
-          console.log(slider);
+
           getTagsBg(slider, true);
         }
 
@@ -536,9 +508,6 @@ export default defineComponent({
       pinFeedDream.value = await getPinterest('1141944117954577837', 18, false); // city sightseeing
       pinFeedActivities.value = await getPinterest('1141944117954581418', 18, false); // experiences
       pinFeedGastronomy.value = await getPinterest('1141944117954577885', 18, false); // gastronomy
-      // console.log(emailref.value);
-      // console.log(getCurrentInstance().ctx.$refs.emailref);
-
     });
 
     return {
