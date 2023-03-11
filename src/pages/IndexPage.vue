@@ -407,12 +407,16 @@ export default defineComponent({
         request.value = request;
 
         // todo check if success
-        getRecommendation(req.id);
+        try {
+          getRecommendation(req.id);
+          step.value = 12;
+
+        } catch {
+          step.value = 12;
+        }
       } catch(e) {
         console.log(e);
       }
-
-      step.value = 12;
     };
 
     const getTagsBg = (slider, analyse = false, debug) => {
