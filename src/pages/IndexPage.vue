@@ -200,7 +200,7 @@ to travel for?"
           flat
           :disabled="!(email != null && email !== '')"
           class="btn-main q-mb-sm"
-          label="Get my travel plan"
+          label="Get my FREE travel plan"
           @click="buildReq"
         />
         <what-you-get />
