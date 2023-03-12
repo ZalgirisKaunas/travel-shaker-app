@@ -11,6 +11,9 @@
     :slides-per-view="1"
     :watchSlidesProgress="true"
     :loop="false"
+    :observer="true"
+    :observeParents="true"
+    :rebuildOnUpdate="true"
     @swiper="onSwiperStack"
   >
     <swiper-slide
@@ -42,7 +45,6 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css/grid";
 import "swiper/css/pagination";
 import "swiper/css";
-import { Grid, Pagination } from "swiper";
 import { api, tourastioApi } from "boot/axios";
 
 export default defineComponent({
@@ -76,6 +78,7 @@ export default defineComponent({
 
     const onSwiperStack = (swiper) => {
       swipe.value = swiper;
+      swiper.update();
     };
     const number = ref(props.modelValue);
     const changeStep = (val) => {
@@ -89,7 +92,6 @@ export default defineComponent({
     );
 
     onMounted(async () => {
-      // await getPinterest();
       pinFeedVisited.value = props.pinFeed
     });
 
@@ -105,3 +107,8 @@ export default defineComponent({
   },
 });
 </script>
+<style>
+.visited-countries-select .swiper-slide {
+  width: calc(100% + 1px) !important;
+}
+</style>
