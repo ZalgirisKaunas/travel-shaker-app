@@ -148,24 +148,24 @@ to travel for?"
         v-model="selectedActivities"
       />
     </form-step>
-    <form-step
-      v-show="step === 9"
-      @changeStep="changeStepp(1, 'pinFeedGastronomy')"
-      :valid="selectedGastronomy.length > 0"
-      subtitle="What are your favourite things to eat on vacations? Select by tapping up to 3 photos."
-      title="Gourmet food experience or continental breakfast?"
-      class="step flex flex-center"
-      :step="step"
-    >
-      <slider-select
-        :pinFeedSlider="pinFeedGastronomy"
-        :board="'1141944117954577885'"
-        v-model="selectedGastronomy"
-      />
-    </form-step>
+<!--    <form-step-->
+<!--      v-show="step === 9"-->
+<!--      @changeStep="changeStepp(1, 'pinFeedGastronomy')"-->
+<!--      :valid="selectedGastronomy.length > 0"-->
+<!--      subtitle="What are your favourite things to eat on vacations? Select by tapping up to 3 photos."-->
+<!--      title="Gourmet food experience or continental breakfast?"-->
+<!--      class="step flex flex-center"-->
+<!--      :step="step"-->
+<!--    >-->
+<!--      <slider-select-->
+<!--        :pinFeedSlider="pinFeedGastronomy"-->
+<!--        :board="'1141944117954577885'"-->
+<!--        v-model="selectedGastronomy"-->
+<!--      />-->
+<!--    </form-step>-->
 
     <form-step
-      v-show="step === 10"
+      v-show="step === 9"
       @changeStep="changeStepp"
       subtitle="Let us get to know you a little..."
       title="Are you fancy visiting villages?"
@@ -180,7 +180,7 @@ to travel for?"
       />
     </form-step>
     <form-step
-      v-if="step === 11"
+      v-if="step === 10"
       @changeStep="changeStepp"
       subtitle=""
       title="We created a personalised recommendation for you. Where should we send it?"
@@ -208,7 +208,7 @@ to travel for?"
       </div>
     </form-step>
     <form-step
-      v-if="step === 12"
+      v-if="step === 11"
       @changeStep="changeStepp"
       :headerClass="'success-msg'"
       subtitle=" We will analyze your selection and will share the recommended places to visit via e-mail."
@@ -409,10 +409,10 @@ export default defineComponent({
         // todo check if success
         try {
           getRecommendation(req.id);
-          step.value = 12;
+          step.value = 11;
 
         } catch {
-          step.value = 12;
+          step.value = 11;
         }
       } catch(e) {
         console.log(e);

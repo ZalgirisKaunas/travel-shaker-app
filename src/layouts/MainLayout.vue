@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="counter === 11"
+    v-if="diffLayout"
     class="hero-swiper desktop-only hero-desktop"
   >
     <div class="swiper-slide-hero">
@@ -10,27 +10,27 @@
 
   <q-layout view="lHh Lpr lFf" class="layout_tourastio">
     <q-header class="bg-transparent">
-      <q-toolbar :class="{ blur: counter === 11 }" class="text-center">
+      <q-toolbar :class="{ blur: diffLayout }" class="text-center">
         <q-toolbar-title class="text-positive"> Travel Shaker </q-toolbar-title>
       </q-toolbar>
 
       <div
         class="hero-swiper mobile-hero"
-        v-if="counter === 11"
+        v-if="diffLayout"
       >
         <div class="swiper-slide-hero">
           <img :src="img" />
         </div>
       </div>
       <q-linear-progress
-        v-if="counter !== 11"
+        v-if="!diffLayout"
         :value="progressVal"
         track-color="warning"
         color="black"
       />
     </q-header>
 
-    <q-page-container :class="{ pt: counter === 11 }">
+    <q-page-container :class="{ pt: diffLayout }">
       <router-view />
     </q-page-container>
 
@@ -109,8 +109,10 @@ export default defineComponent({
     const progressVal = computed(() =>
       Number((0.1 * (counter.value - 1)).toFixed(1))
     );
+    const diffLayout = computed(() => counter.value === 10);
 
     return {
+      diffLayout,
       counter,
       img,
       progressVal,
